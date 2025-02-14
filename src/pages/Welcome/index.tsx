@@ -37,12 +37,12 @@ const Dashboard = () => {
             <Card bodyStyle={{ padding: '12px' }}>
               <Row>
                 {/* Left stats section - reduced width */}
-                <Col span={3}>
+                <Col span={4}>
                   <MiddleLeft />
                 </Col>
 
                 {/* Right map section - increased width */}
-                <Col span={21}>
+                <Col span={20}>
                   <MiddleRight />
                 </Col>
               </Row>

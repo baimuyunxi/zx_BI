@@ -20,7 +20,7 @@ const MapComponent = () => {
       )
         .then((response) => response.json())
         .then((list) => {
-          // 过滤湖南省的城市数据（430000是湖南省的行政区划代码）
+          // 过滤湖南省的城市数据（430000 是湖南省的行政区划代码）
           const data = list
             .filter(({ level, parent }) => level === 'city' && parent === 430000)
             .map((item) => ({ ...item, value: Math.random() * 5000 }));
@@ -88,7 +88,6 @@ const MapComponent = () => {
   return (
     <div
       id="map"
-      className="w-full h-192 rounded-lg" // 设置高度为 768px
       style={{
         background: 'rgb(242, 243, 245)',
         minHeight: '768px', // 确保最小高度也设置好
