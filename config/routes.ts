@@ -26,7 +26,7 @@ export default [
     name: 'welcome',
     icon: 'smile',
     path: '/Welcome',
-    component: './Welcome',
+    component: './Welcome/',
   },
   {
     path: '/admin',
@@ -53,7 +53,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/Welcome',
+    redirect: '/Welcome/',
   },
   {
     path: '*',
