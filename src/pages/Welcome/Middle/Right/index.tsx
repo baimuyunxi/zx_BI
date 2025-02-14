@@ -1,99 +1,139 @@
 import React, { useEffect } from 'react';
-import { GaodeMap, Scene } from '@antv/l7';
-import { Choropleth } from '@antv/l7plot';
+import * as echarts from 'echarts';
 
-const MapComponent = () => {
+const HunanMap = () => {
   useEffect(() => {
-    const scene = new Scene({
-      id: 'map',
-      map: new GaodeMap({
-        style: 'blank',
-        // 湖南省中心点坐标
-        center: [112.982279, 28.19409],
-        zoom: 7,
-      }),
-    });
+    setTimeout(() => {
+      const chartDom = document.getElementById('hunan-map');
+      if (!chartDom) return;
 
-    scene.on('loaded', () => {
-      fetch(
-        'https://gw.alipayobjects.com/os/alisis/geo-data-v0.1.1/administrative-data/area-list.json',
-      )
+      const myChart = echarts.init(chartDom);
+      myChart.showLoading();
+
+      const cities = [
+        { name: '长沙市', value: Math.random() * 5000 },
+        { name: '株洲市', value: Math.random() * 5000 },
+        { name: '湘潭市', value: Math.random() * 5000 },
+        { name: '衡阳市', value: Math.random() * 5000 },
+        { name: '邵阳市', value: Math.random() * 5000 },
+        { name: '岳阳市', value: Math.random() * 5000 },
+        { name: '常德市', value: Math.random() * 5000 },
+        { name: '张家界市', value: Math.random() * 5000 },
+        { name: '益阳市', value: Math.random() * 5000 },
+        { name: '郴州市', value: Math.random() * 5000 },
+        { name: '永州市', value: Math.random() * 5000 },
+        { name: '怀化市', value: Math.random() * 5000 },
+        { name: '娄底市', value: Math.random() * 5000 },
+        { name: '湘西土家族苗族自治州', value: Math.random() * 5000 },
+      ];
+
+      fetch('https://geo.datav.aliyun.com/areas_v3/bound/430000_full.json')
         .then((response) => response.json())
-        .then((list) => {
-          // 过滤湖南省的城市数据（430000 是湖南省的行政区划代码）
-          const data = list
-            .filter(({ level, parent }) => level === 'city' && parent === 430000)
-            .map((item) => ({ ...item, value: Math.random() * 5000 }));
+        .then((hunanJson) => {
+          myChart.hideLoading();
 
-          const choropleth = new Choropleth({
-            source: {
-              data,
-              joinBy: {
-                sourceField: 'adcode',
-                geoField: 'adcode',
-              },
-            },
-            viewLevel: {
-              level: 'province',
-              adcode: 430000, // 湖南省
-            },
-            autoFit: true,
-            color: {
-              field: 'value',
-              value: ['#B8E1FF', '#7DAAFF', '#3D76DD', '#0047A5', '#001D70'],
-              scale: { type: 'quantize' },
-            },
-            style: {
-              opacity: 1,
-              stroke: '#ccc',
-              lineWidth: 0.6,
-              lineOpacity: 1,
-            },
-            label: {
-              visible: true,
-              field: 'name',
-              style: {
-                fill: '#000',
-                opacity: 0.8,
-                fontSize: 12,
-                stroke: '#fff',
-                strokeWidth: 1.5,
-                textAllowOverlap: false,
-                padding: [5, 5],
-              },
-            },
-            state: {
-              active: { stroke: 'black', lineWidth: 1 },
+          echarts.registerMap('hunan', hunanJson);
+
+          const option = {
+            title: {
+              left: 'right',
             },
             tooltip: {
-              items: ['name', 'adcode', 'value'],
+              trigger: 'item',
+              showDelay: 0,
+              transitionDuration: 0.2,
+              formatter: '{b}<br/>值: {c}',
             },
-            zoom: {
-              position: 'bottomright',
+            visualMap: {
+              left: 'right',
+              min: 0,
+              max: 5000,
+              inRange: {
+                color: ['#B8E1FF', '#7DAAFF', '#3D76DD', '#0047A5', '#001D70'],
+              },
+              text: ['高', '低'],
+              calculable: true,
             },
-            legend: {
-              position: 'bottomleft',
+            toolbox: {
+              show: true,
+              left: 'left',
+              top: 'top',
+              feature: {
+                dataView: { readOnly: false },
+                restore: {},
+                saveAsImage: {},
+              },
             },
-          });
+            series: [
+              {
+                name: '湖南省数据',
+                type: 'map',
+                roam: true,
+                map: 'hunan',
+                label: {
+                  show: true,
+                  fontSize: 12,
+                  color: '#ffffff',
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: 14,
+                    color: '#000',
+                  },
+                },
+                data: cities,
+                itemStyle: {
+                  areaColor: '#B8E1FF',
+                  borderColor: '#000000',
+                  borderWidth: 1,
+                },
+                // zoom: 1.0,
+                aspectScale: 0.85, // 调整地图的宽高比
+                layoutCenter: ['50%', '50%'], // 地图居中
+                layoutSize: '100%', // 地图大小占满容器
+                select: {
+                  label: {
+                    show: true,
+                    color: '#fff',
+                  },
+                  itemStyle: {
+                    areaColor: '#3D76DD',
+                  },
+                },
+              },
+            ],
+          };
 
-          choropleth.addToScene(scene);
+          myChart.setOption(option);
+        })
+        .catch((error) => {
+          console.error('加载地图数据失败:', error);
+          myChart.hideLoading();
         });
-    });
 
-    return () => {
-      scene.destroy();
-    };
+      // 添加响应式调整
+      const handleResize = () => {
+        myChart.resize();
+      };
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        myChart.dispose();
+        window.removeEventListener('resize', handleResize);
+      };
+    }, 100);
   }, []);
 
   return (
     <div
-      id="map"
+      id="hunan-map"
       style={{
-        background: 'rgb(242, 243, 245)',
-        minHeight: '768px', // 确保最小高度也设置好
+        width: '100%',
+        height: '710px',
       }}
     />
   );
 };
 
-export default MapComponent;
+export default HunanMap;
