@@ -23,16 +23,16 @@ export default [
   //   ],
   // },
   {
-    path: '/welcome',
     name: 'welcome',
     icon: 'smile',
+    path: '/Welcome',
     component: './Welcome',
   },
   {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
-    access: 'canAdmin',
+    // access: 'canAdmin',
     routes: [
       {
         path: '/admin',
@@ -53,7 +53,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/Welcome',
   },
   {
     path: '*',
