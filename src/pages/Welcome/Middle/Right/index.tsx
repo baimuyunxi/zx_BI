@@ -130,7 +130,7 @@ const HunanMap = () => {
       id="hunan-map"
       style={{
         width: '100%',
-        height: '710px',
+        height: '100%',
       }}
     />
   );
