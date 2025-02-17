@@ -7,7 +7,7 @@ const formatter: StatisticProps['formatter'] = (value) => (
   <CountUp end={value as number} separator="," />
 );
 
-const MiddleLeft = () => {
+const MiddleLeftStats = () => {
   return (
     <Row>
       <Col span={24} style={{ width: '100%' }}>
@@ -250,4 +250,4 @@ const MiddleLeft = () => {
   );
 };
 
-export default MiddleLeft;
+export default MiddleLeftStats;

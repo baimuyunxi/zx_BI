@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as echarts from 'echarts';
 
-const HunanMap = () => {
+const MiddleRightMap = () => {
   useEffect(() => {
     setTimeout(() => {
       const chartDom = document.getElementById('hunan-map');
@@ -136,4 +136,4 @@ const HunanMap = () => {
   );
 };
 
-export default HunanMap;
+export default MiddleRightMap;

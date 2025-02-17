@@ -1,12 +1,12 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import MiddleLeft from '@/pages/Welcome/Middle/Left';
-import MiddleRight from '@/pages/Welcome/Middle/Right';
+import MiddleLeftStats from 'src/pages/Welcome/Middle/LeftStats';
+import MiddleRightMap from 'src/pages/Welcome/Middle/RightMap';
 
 const Dashboard = () => {
   return (
     <Row gutter={[16, 16]}>
-      {/* Left Column - Reduced from 6 to 5 */}
+      {/* LeftStats Column - Reduced from 6 to 5 */}
       <Col span={5}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
@@ -36,14 +36,14 @@ const Dashboard = () => {
           <Col span={24}>
             <Card bodyStyle={{ padding: '12px' }}>
               <Row>
-                {/* Left stats section - reduced width */}
+                {/* LeftStats stats section - reduced width */}
                 <Col span={4}>
-                  <MiddleLeft />
+                  <MiddleLeftStats />
                 </Col>
 
-                {/* Right map section - increased width */}
+                {/* RightMap map section - increased width */}
                 <Col span={20}>
-                  <MiddleRight />
+                  <MiddleRightMap />
                 </Col>
               </Row>
             </Card>
@@ -59,7 +59,7 @@ const Dashboard = () => {
         </Row>
       </Col>
 
-      {/* Right Column - Reduced from 6 to 5 */}
+      {/* RightMap Column - Reduced from 6 to 5 */}
       <Col span={5}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
