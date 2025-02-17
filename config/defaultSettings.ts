@@ -32,10 +32,10 @@ const Settings: ProLayoutProps & {
   fixedHeader: true,
   fixSiderbar: true,
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://s3.bmp.ovh/imgs/2025/02/17/828239f65fdc918f.png',
   token: {},
   splitMenus: false,
-  siderMenuType: "group",
+  siderMenuType: 'group',
 };
 
 export default Settings;
