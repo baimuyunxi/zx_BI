@@ -1,7 +1,8 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import MiddleLeftStats from 'src/pages/Welcome/Middle/LeftStats';
-import MiddleRightMap from 'src/pages/Welcome/Middle/RightMap';
+import MiddleLeftStats from '@/pages/Welcome/Middle/LeftStats';
+import MiddleRightMap from '@/pages/Welcome/Middle/RightMap';
+import BottomTable from '@/pages/Welcome/Middle/BottomTable';
 
 const Dashboard = () => {
   return (
@@ -50,11 +51,7 @@ const Dashboard = () => {
           </Col>
 
           <Col span={24}>
-            <Card
-              title="实时工单信息记录"
-              headStyle={{ color: '#4dabf7' }}
-              bodyStyle={{ padding: '12px' }}
-            ></Card>
+            <BottomTable />
           </Col>
         </Row>
       </Col>
