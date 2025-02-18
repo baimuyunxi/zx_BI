@@ -8,7 +8,7 @@ const Dashboard = () => {
   return (
     <Row gutter={[16, 16]}>
       {/* LeftStats Column - Reduced from 6 to 5 */}
-      <Col span={5}>
+      <Col span={6}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card
@@ -16,7 +16,7 @@ const Dashboard = () => {
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}
             >
-              <div className="h-64 w-full"></div>
+              {/*<div className="h-64 w-full"></div>*/}
             </Card>
           </Col>
           <Col span={24}>
@@ -32,7 +32,7 @@ const Dashboard = () => {
       </Col>
 
       {/* Middle Column - Increased from 12 to 14 */}
-      <Col span={14} className="px-4">
+      <Col span={12}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card bodyStyle={{ padding: '12px' }}>
@@ -57,7 +57,7 @@ const Dashboard = () => {
       </Col>
 
       {/* RightMap Column - Reduced from 6 to 5 */}
-      <Col span={5}>
+      <Col span={6}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card
