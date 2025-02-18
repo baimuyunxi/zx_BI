@@ -89,22 +89,46 @@ const BottomTable = () => {
     }
   };
 
-  // 导出表格数据为 Excel 文件
+  // 导出Excel功能
   const handleDownload = () => {
     // 格式化当前日期
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
 
-    // 将表格数据转换为工作表，并包含列头
-    const ws = XLSX.utils.json_to_sheet(data, { header: Object.keys(dataTypes) }); // 确保包含列头
-    const wb = XLSX.utils.book_new(); // 创建新的工作簿
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // 将工作表添加到工作簿
+    // 获取列配置并过滤掉序号列
+    const filteredColumns = dataTypes
+      .filter((col) => col.dataIndex !== 'index')
+      .map((col) => ({
+        dataIndex: col.dataIndex,
+        title: col.title || '',
+      }));
 
-    // 将工作簿转换为字节数组
+    // 获取表头
+    const headers = filteredColumns.map((col) => col.title);
+
+    // 转换数据行
+    const rows = data.map((record) =>
+      filteredColumns.map((col) => {
+        const value = record[col.dataIndex as keyof DataType];
+        return value !== undefined ? value : '';
+      }),
+    );
+
+    // 组合表头和数据行
+    const excelData = [headers, ...rows];
+
+    // 创建工作表
+    const ws = XLSX.utils.aoa_to_sheet(excelData);
+
+    // 创建工作簿
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // 导出为Excel文件
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' }); // 创建 Blob 对象
-
-    // 使用当前日期生成文件名
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     const fileName = `工单_${formattedDate}.xlsx`;
 
     // 保存为 Excel 文件
