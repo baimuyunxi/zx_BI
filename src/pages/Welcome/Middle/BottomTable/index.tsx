@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DataType, dataTypes } from '@/pages/Welcome/Middle/BottomTable/entity/DataType';
 import { ActionType, ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
+import { FullscreenOutlined } from '@ant-design/icons';
 import { data } from '@/pages/Welcome/Middle/BottomTable/data';
 import { FormInstance } from 'antd/lib';
-import * as XLSX from 'xlsx'; // 引入 xlsx 库
-import { saveAs } from 'file-saver'; // 引入 file-saver 库来保存文件
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import EnlargedTable from './Enlarged/EnlargedTable';
 
 const BottomTable = () => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [isEnlarged, setIsEnlarged] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout>();
   const scrollIntervalRef = useRef<NodeJS.Timeout>();
 
+  // 保留原有的滚动相关函数...
   const startScroll = () => {
     if (scrollRef.current && !isRestoring) {
       // 在恢复过程中不启动滚动
@@ -136,29 +140,43 @@ const BottomTable = () => {
   };
 
   return (
-    <div ref={scrollRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={handleMouseLeave}>
-      <ProTable<DataType>
-        actionRef={actionRef}
-        formRef={formRef}
-        size="small"
-        headerTitle={
-          <span style={{ color: '#4dabf7', fontSize: '18px', fontWeight: 'bold' }}>
-            实时工单信息记录
-          </span>
-        }
-        search={false}
-        bordered={true}
-        columns={dataTypes}
-        dataSource={data}
-        scroll={{ y: 200 }}
-        pagination={false}
-        toolBarRender={() => [
-          <Button key="button" onClick={handleDownload} type="primary">
-            下载
-          </Button>,
-        ]}
-      />
-    </div>
+    <>
+      <div ref={scrollRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={handleMouseLeave}>
+        <ProTable<DataType>
+          actionRef={actionRef}
+          formRef={formRef}
+          size="small"
+          headerTitle={
+            <span style={{ color: '#4dabf7', fontSize: '18px', fontWeight: 'bold' }}>
+              实时工单信息记录
+            </span>
+          }
+          search={false}
+          bordered={true}
+          columns={dataTypes}
+          dataSource={data}
+          scroll={{ y: 200 }}
+          pagination={false}
+          toolBarRender={() => [
+            <Space key="buttons">
+              <Button key="download" onClick={handleDownload} type="primary">
+                下载
+              </Button>
+              <Tooltip title="放大">
+                <Button
+                  key="enlarge"
+                  style={{ border: 'none' }}
+                  icon={<FullscreenOutlined />}
+                  onClick={() => setIsEnlarged(true)}
+                />
+              </Tooltip>
+            </Space>,
+          ]}
+        />
+      </div>
+
+      <EnlargedTable visible={isEnlarged} onClose={() => setIsEnlarged(false)} data={data} />
+    </>
   );
 };
 
