@@ -3,6 +3,7 @@ import { Row, Col, Card } from 'antd';
 import MiddleLeftStats from '@/pages/Welcome/Middle/LeftStats';
 import MiddleRightMap from '@/pages/Welcome/Middle/RightMap';
 import BottomTable from '@/pages/Welcome/Middle/BottomTable';
+import LeftStats from '@/pages/Welcome/LeftStats';
 
 const Dashboard = () => {
   return (
@@ -16,7 +17,7 @@ const Dashboard = () => {
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}
             >
-              {/*<div className="h-64 w-full"></div>*/}
+              <LeftStats />
             </Card>
           </Col>
           <Col span={24}>
