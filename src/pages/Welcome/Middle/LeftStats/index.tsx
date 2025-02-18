@@ -18,7 +18,7 @@ const MiddleLeftStats = () => {
             borderBottom: '1px solid #e5e7eb',
             marginBottom: '16px',
             width: '100%',
-            padding: '6px 0',
+            padding: '2px 0',
             right: 5,
           }}
         >
@@ -51,9 +51,8 @@ const MiddleLeftStats = () => {
               fontFamily: 'DIN',
               color: '#4dabf7',
               fontWeight: '500',
-              paddingBottom: '6px',
               width: '100%',
-              marginTop: '36px',
+              marginTop: '28px',
             }}
           />
         </div>
@@ -65,7 +64,7 @@ const MiddleLeftStats = () => {
             borderBottom: '1px solid #e5e7eb',
             marginBottom: '16px',
             width: '100%',
-            padding: '6px 0',
+            padding: '2px 0',
             right: 5,
           }}
         >
@@ -98,9 +97,8 @@ const MiddleLeftStats = () => {
               fontFamily: 'DIN',
               color: '#4dabf7',
               fontWeight: '500',
-              paddingBottom: '4px',
               width: '100%',
-              marginTop: '36px',
+              marginTop: '28px',
             }}
           />
         </div>
@@ -112,7 +110,7 @@ const MiddleLeftStats = () => {
             borderBottom: '1px solid #e5e7eb',
             marginBottom: '16px',
             width: '100%',
-            padding: '6px 0',
+            padding: '2px 0',
             right: 5,
           }}
         >
@@ -145,9 +143,8 @@ const MiddleLeftStats = () => {
               fontFamily: 'DIN',
               color: '#4dabf7',
               fontWeight: '500',
-              paddingBottom: '4px',
               width: '100%',
-              marginTop: '36px',
+              marginTop: '28px',
             }}
           />
         </div>
@@ -159,7 +156,7 @@ const MiddleLeftStats = () => {
             borderBottom: '1px solid #e5e7eb',
             marginBottom: '16px',
             width: '100%',
-            padding: '6px 0',
+            padding: '2px 0',
             right: 5,
           }}
         >
@@ -192,9 +189,8 @@ const MiddleLeftStats = () => {
               fontFamily: 'DIN',
               color: '#f59f00',
               fontWeight: '500',
-              paddingBottom: '4px',
               width: '100%',
-              marginTop: '36px',
+              marginTop: '28px',
             }}
           />
         </div>
@@ -206,7 +202,7 @@ const MiddleLeftStats = () => {
             borderBottom: '1px solid #e5e7eb',
             marginBottom: '16px',
             width: '100%',
-            padding: '6px 0',
+            padding: '2px 0',
             right: 5,
           }}
         >
@@ -239,9 +235,8 @@ const MiddleLeftStats = () => {
               fontFamily: 'DIN',
               color: '#4dabf7',
               fontWeight: '500',
-              paddingBottom: '4px',
               width: '100%',
-              marginTop: '36px',
+              marginTop: '28px',
             }}
           />
         </div>
