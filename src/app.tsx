@@ -1,4 +1,11 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
+import {
+  Footer,
+  Question,
+  SelectLang,
+  AvatarDropdown,
+  AvatarName,
+  DigitalClock,
+} from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -8,6 +15,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -50,13 +58,13 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],  // 国际化切换
+    actionsRender: () => [<DigitalClock />], // 导航栏右上角
     // avatarProps: {
-      // src: initialState?.currentUser?.avatar,
-      // title: <AvatarName />,
-      // render: (_, avatarChildren) => {
-      //   return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
-      // },
+    // src: initialState?.currentUser?.avatar,
+    // title: <AvatarName />,
+    // render: (_, avatarChildren) => {
+    //   return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+    // },
     // },
     waterMarkProps: {
       content: initialState?.currentUser?.name,
