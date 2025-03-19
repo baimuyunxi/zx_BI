@@ -43,6 +43,9 @@ const WeatherChart: React.FC = () => {
             axisPointer: {
               type: 'shadow',
             },
+            axisLabel: {
+              rotate: 45, // 旋转角度，45 即为 45°
+            },
           },
         ],
         yAxis: [
