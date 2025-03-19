@@ -3,12 +3,13 @@ import { Row, Col, Card } from 'antd';
 import MiddleLeftStats from '@/pages/Welcome/Middle/LeftStats';
 import MiddleRightMap from '@/pages/Welcome/Middle/RightMap';
 import BottomTable from '@/pages/Welcome/Middle/BottomTable';
-import LeftStats from '@/pages/Welcome/LeftStats';
+import LeftStats from '@/pages/Welcome/Left/fullService';
+import MyWordCloud from '@/pages/Welcome/Right/WordCloud';
 
 const Dashboard = () => {
   return (
     <Row gutter={[16, 16]}>
-      {/* LeftStats Column - Reduced from 6 to 5 */}
+      {/* Left Column - Reduced from 6 to 5 */}
       <Col span={6}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
@@ -38,7 +39,7 @@ const Dashboard = () => {
           <Col span={24}>
             <Card bodyStyle={{ padding: '12px' }}>
               <Row>
-                {/* LeftStats stats section - reduced width */}
+                {/* Left stats section - reduced width */}
                 <Col span={4}>
                   <MiddleLeftStats />
                 </Col>
@@ -57,9 +58,19 @@ const Dashboard = () => {
         </Row>
       </Col>
 
-      {/* RightMap Column - Reduced from 6 to 5 */}
+      {/* Right Column - Reduced from 6 to 5 */}
       <Col span={6}>
         <Row gutter={[0, 16]}>
+          <Col span={24}>
+            <Card
+              title="工单受理词云"
+              className="bg-slate-800 text-blue-400"
+              headStyle={{ color: '#4dabf7' }}
+              bodyStyle={{ padding: '12px' }}
+            >
+              <MyWordCloud />
+            </Card>
+          </Col>
           <Col span={24}>
             <Card
               title="全业务队列工单"
@@ -72,7 +83,7 @@ const Dashboard = () => {
           </Col>
           <Col span={24}>
             <Card
-              title="政企工单"
+              title="政企故障工单"
               className="bg-slate-800 text-blue-400"
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}

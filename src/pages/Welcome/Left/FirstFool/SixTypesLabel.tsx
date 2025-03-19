@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import type { EChartsOption } from 'echarts';
-import { Card } from 'antd';
 
 interface WorldPopulationProps {
   style?: React.CSSProperties;
   className?: string;
 }
 
-const SixTypesLabel: React.FC<WorldPopulationProps> = ({ style, className }) => {
+const SixTypesLabel: React.FC<WorldPopulationProps> = ({ style}) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

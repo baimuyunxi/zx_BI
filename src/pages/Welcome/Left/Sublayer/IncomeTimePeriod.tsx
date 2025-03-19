@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Card } from 'antd';
 import * as echarts from 'echarts';
 import type { EChartsOption } from 'echarts';
 
