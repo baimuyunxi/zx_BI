@@ -1,3 +1,5 @@
+![示例图](https://s3.bmp.ovh/imgs/2025/03/20/19a19de17145a58a.png)
+
 # Ant Design Pro
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
