@@ -25,8 +25,36 @@ export default [
   {
     name: 'welcome',
     icon: 'smile',
-    path: '/Welcome',
+    path: '/welcome',
     component: './Welcome/',
+  },
+  {
+    name: 'table-list',
+    icon: 'table',
+    path: '/list',
+    routes: [
+      {
+        name: 'table-hw',
+        path: '/list/hw',
+        routes: [
+          {
+            name: 'hw-basic', // 可根据需要命名
+            path: '/list/hw/basic', // 添加子路径
+            component: './TableList',
+          },
+          {
+            name: 'hw-detail', // 可根据需要命名
+            path: '/list/hw/detail', // 添加另一个子路径
+            component: './TableList',
+          },
+        ],
+      },
+      {
+        name: 'table-order',
+        path: '/list/order',
+        component: './TableList',
+      },
+    ],
   },
   {
     path: '/admin',
@@ -44,12 +72,6 @@ export default [
         component: './Admin',
       },
     ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
   },
   {
     path: '/',
