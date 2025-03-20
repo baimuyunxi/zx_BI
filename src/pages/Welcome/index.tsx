@@ -5,12 +5,14 @@ import MiddleRightMap from '@/pages/Welcome/Middle/RightMap';
 import BottomTable from '@/pages/Welcome/Middle/BottomTable';
 import LeftStats from '@/pages/Welcome/Left/fullService';
 import MyWordCloud from '@/pages/Welcome/Right/WordCloud';
+import StackedBarChart from '@/pages/Welcome/Right/fullService';
+import EnterpriseBarChart from "@/pages/Welcome/Right/Enterprise";
 
 const Dashboard = () => {
   return (
     <Row gutter={[16, 16]}>
       {/* Left Column - Reduced from 6 to 5 */}
-      <Col span={8}>
+      <Col span={7}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card
@@ -34,7 +36,7 @@ const Dashboard = () => {
       </Col>
 
       {/* Middle Column - Increased from 12 to 14 */}
-      <Col span={8}>
+      <Col span={10}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card bodyStyle={{ padding: '12px' }}>
@@ -59,11 +61,11 @@ const Dashboard = () => {
       </Col>
 
       {/* Right Column - Reduced from 6 to 5 */}
-      <Col span={8}>
+      <Col span={7}>
         <Row gutter={[0, 16]}>
           <Col span={24}>
             <Card
-              title="工单受理词云"
+              title="工单词云"
               className="bg-slate-800 text-blue-400"
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}
@@ -78,7 +80,7 @@ const Dashboard = () => {
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}
             >
-              <div className="h-64 w-full"></div>
+              <StackedBarChart />
             </Card>
           </Col>
           <Col span={24}>
@@ -88,7 +90,7 @@ const Dashboard = () => {
               headStyle={{ color: '#4dabf7' }}
               bodyStyle={{ padding: '12px' }}
             >
-              <div className="h-64 w-full"></div>
+              <EnterpriseBarChart />
             </Card>
           </Col>
         </Row>
