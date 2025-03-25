@@ -38,21 +38,13 @@ const Dashboard = () => {
           <div style={scrollableColumnStyle} className="hide-scrollbar">
             <Row gutter={[0, 16]}>
               <Col span={24}>
-                <Card
-                  title="万号全业务队列"
-                  headStyle={{ color: '#4dabf7' }}
-                  bodyStyle={{ padding: '12px' }}
-                >
+                <Card title="万号全业务队列" bodyStyle={{ padding: '12px' }}>
                   <LeftStats />
                 </Card>
               </Col>
               <Col span={24}>
-                <Card
-                  title="10009故障队列"
-                  headStyle={{ color: '#4dabf7' }}
-                  bodyStyle={{ padding: '12px' }}
-                >
-                  <div className="h-64 w-full"></div>
+                <Card title="10009故障队列">
+                  <div></div>
                 </Card>
               </Col>
             </Row>
@@ -63,7 +55,7 @@ const Dashboard = () => {
         <Col span={10}>
           <Row gutter={[0, 16]}>
             <Col span={24}>
-              <Card>
+              <Card bodyStyle={{ padding: '12px' }}>
                 <Row>
                   <Col span={4}>
                     <MiddleLeftStats />
@@ -85,32 +77,17 @@ const Dashboard = () => {
           <div style={scrollableColumnStyle} className="hide-scrollbar">
             <Row gutter={[0, 16]}>
               <Col span={24}>
-                <Card
-                  title="工单词云"
-                  className="bg-slate-800 text-blue-400"
-                  headStyle={{ color: '#4dabf7' }}
-                  bodyStyle={{ padding: '12px' }}
-                >
+                <Card title="工单词云" bodyStyle={{ padding: '12px' }}>
                   <MyWordCloud />
                 </Card>
               </Col>
               <Col span={24}>
-                <Card
-                  title="全业务队列工单"
-                  className="bg-slate-800 text-blue-400"
-                  headStyle={{ color: '#4dabf7' }}
-                  bodyStyle={{ padding: '12px' }}
-                >
+                <Card title="全业务队列工单" bodyStyle={{ padding: '12px' }}>
                   <StackedBarChart />
                 </Card>
               </Col>
               <Col span={24}>
-                <Card
-                  title="政企故障工单"
-                  className="bg-slate-800 text-blue-400"
-                  headStyle={{ color: '#4dabf7' }}
-                  bodyStyle={{ padding: '12px' }}
-                >
+                <Card title="政企故障工单" bodyStyle={{ padding: '12px' }}>
                   <EnterpriseBarChart />
                 </Card>
               </Col>

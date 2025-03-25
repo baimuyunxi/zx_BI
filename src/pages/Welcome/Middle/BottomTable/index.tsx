@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DataType, dataTypes } from '@/pages/Welcome/Middle/BottomTable/entity/DataType';
 import { ActionType, ProTable } from '@ant-design/pro-components';
-import { Button, Space, Tooltip } from 'antd';
+import {Button, Card, Space, Tooltip} from 'antd';
 import { FullscreenOutlined } from '@ant-design/icons';
 import { data } from '@/pages/Welcome/Middle/BottomTable/data';
 import { FormInstance } from 'antd/lib';
@@ -141,7 +141,7 @@ const BottomTable = () => {
 
   return (
     <>
-      <div ref={scrollRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={handleMouseLeave}>
+      <Card ref={scrollRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={handleMouseLeave} bodyStyle={{ padding: '0' }}>
         <ProTable<DataType>
           actionRef={actionRef}
           formRef={formRef}
@@ -173,7 +173,7 @@ const BottomTable = () => {
             </Space>,
           ]}
         />
-      </div>
+      </Card>
 
       <EnlargedTable visible={isEnlarged} onClose={() => setIsEnlarged(false)} data={data} />
     </>
