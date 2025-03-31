@@ -18,7 +18,7 @@ const EnterpriseBarChart = () => {
             type: 'shadow',
           },
         },
-        legend: {},
+        // legend: {},
         grid: {
           left: '3%',
           right: '4%',
@@ -40,15 +40,6 @@ const EnterpriseBarChart = () => {
           },
         ],
         series: [
-          {
-            name: '1小时内增长量',
-            type: 'bar',
-            stack: 'Ad',
-            emphasis: {
-              focus: 'series',
-            },
-            data: [220, 182, 191, 234, 290, 330, 310],
-          },
           {
             name: '原始量',
             type: 'bar',
@@ -79,7 +70,7 @@ const EnterpriseBarChart = () => {
   }, []);
 
   // 这是您所需的返回语句
-  return <div ref={chartRef} style={{ width: '100%', height: '320px' }} />;
+  return <div ref={chartRef} style={{ width: '100%', height: '420px' }} />;
 };
 
 export default EnterpriseBarChart;

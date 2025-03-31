@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'antd';
-import SixTypesLabel from '@/pages/Welcome/Left/FirstFool/SixTypesLabel';
-import WeatherChart from '@/pages/Welcome/Left/Sublayer/IncomeTimePeriod';
+import SixTypesLabel from '@/pages/Welcome/Parietal/Left/FirstFool/SixTypesLabel';
+import WeatherChart from '@/pages/Welcome/Parietal/Left/Sublayer/IncomeTimePeriod';
 
 const LeftStats = () => {
   return (

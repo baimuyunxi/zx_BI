@@ -39,7 +39,7 @@ const Target: React.FC = () => {
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title="政企工单" value={4} formatter={formatter} />
+            <Statistic title="政企故障工单" value={4} formatter={formatter} />
           </Card>
         </Col>
         <Col md={8} sm={12} xs={24}>
