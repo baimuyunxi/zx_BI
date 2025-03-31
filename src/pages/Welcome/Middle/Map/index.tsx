@@ -130,7 +130,7 @@ const MiddleRightMap = () => {
       id="hunan-map"
       style={{
         width: '100%',
-        height: '100%',
+        height: '520px',
       }}
     />
   );
