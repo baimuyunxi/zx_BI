@@ -7,6 +7,7 @@ import StackedBarChart from '@/pages/Welcome/Parietal/Right/fullService';
 import EnterpriseBarChart from '@/pages/Welcome/Parietal/Right/Enterprise';
 import Target from '@/pages/Welcome/Parietal/Middle/Target';
 import EnStats from '@/pages/Welcome/Parietal/Left/enterprise';
+import TopList from '@/pages/Welcome/TopTable';
 
 const Dashboard = () => {
   // 定义整体高度常量，保证各列一致
@@ -64,71 +65,74 @@ const Dashboard = () => {
       {/* 添加内联样式标签 */}
       <style>{hideScrollbarCSS}</style>
 
-      <Row>
-        <Row gutter={[16, 16]}>
-          {/* Left Column - 可滚动，隐藏滚动条 */}
-          <Col span={7}>
-            {/* @ts-ignore*/}
-            <div style={scrollableColumnStyle} className="hide-scrollbar">
-              <Row gutter={[0, 16]}>
-                <Col span={24}>
-                  <Card title="万号全业务队列" bodyStyle={{ padding: '12px' }}>
-                    <LeftStats />
-                  </Card>
-                </Col>
-                <Col span={24}>
-                  <Card title="10009故障队列">
-                    <EnStats />
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-
-          {/* Middle Column - 使用弹性布局 */}
-          <Col span={10}>
-            {/* @ts-ignore*/}
-            <div style={middleColumnStyle}>
-              {/* Target 组件区域 */}
-              <div>
-                <Target />
-              </div>
-
-              {/* 地图区域 - 使用flex:1填充剩余空间 */}
-              {/* @ts-ignore*/}
-              <div style={mapContainerStyle}>
-                {/* @ts-ignore*/}
-                <Card style={mapCardStyle} bodyStyle={mapCardBodyStyle}>
-                  <MiddleRightMap />
+      <Row gutter={[16, 16]}>
+        {/* Left Column - 可滚动，隐藏滚动条 */}
+        <Col span={7}>
+          {/* @ts-ignore*/}
+          <div style={scrollableColumnStyle} className="hide-scrollbar">
+            <Row gutter={[0, 16]}>
+              <Col span={24}>
+                <Card title="万号全业务队列" bodyStyle={{ padding: '12px' }}>
+                  <LeftStats />
                 </Card>
-              </div>
-            </div>
-          </Col>
+              </Col>
+              <Col span={24}>
+                <Card title="10009故障队列">
+                  <EnStats />
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </Col>
 
-          {/* Right Column - 可滚动，隐藏滚动条 */}
-          <Col span={7}>
-            {/* @ts-ignore*/}
-            <div style={scrollableColumnStyle} className="hide-scrollbar">
-              <Row gutter={[0, 16]}>
-                <Col span={24}>
-                  <Card title="工单词云" bodyStyle={{ padding: '12px' }}>
-                    <MyWordCloud />
-                  </Card>
-                </Col>
-                <Col span={24}>
-                  <Card title="全业务队列工单" bodyStyle={{ padding: '12px' }}>
-                    <StackedBarChart />
-                  </Card>
-                </Col>
-                <Col span={24}>
-                  <Card title="政企故障工单" bodyStyle={{ padding: '12px' }}>
-                    <EnterpriseBarChart />
-                  </Card>
-                </Col>
-              </Row>
+        {/* Middle Column - 使用弹性布局 */}
+        <Col span={10}>
+          {/* @ts-ignore*/}
+          <div style={middleColumnStyle}>
+            {/* Target 组件区域 */}
+            <div>
+              <Target />
             </div>
-          </Col>
-        </Row>
+
+            {/* 地图区域 - 使用flex:1填充剩余空间 */}
+            {/* @ts-ignore*/}
+            <div style={mapContainerStyle}>
+              {/* @ts-ignore*/}
+              <Card style={mapCardStyle} bodyStyle={mapCardBodyStyle}>
+                <MiddleRightMap />
+              </Card>
+            </div>
+          </div>
+        </Col>
+
+        {/* Right Column - 可滚动，隐藏滚动条 */}
+        <Col span={7}>
+          {/* @ts-ignore*/}
+          <div style={scrollableColumnStyle} className="hide-scrollbar">
+            <Row gutter={[0, 16]}>
+              <Col span={24}>
+                <Card title="工单词云" bodyStyle={{ padding: '12px' }}>
+                  <MyWordCloud />
+                </Card>
+              </Col>
+              <Col span={24}>
+                <Card title="全业务队列工单" bodyStyle={{ padding: '12px' }}>
+                  <StackedBarChart />
+                </Card>
+              </Col>
+              <Col span={24}>
+                <Card title="政企故障工单" bodyStyle={{ padding: '12px' }}>
+                  <EnterpriseBarChart />
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]} style={{ paddingTop: '16px' }}>
+        <Col span={24}>
+          <TopList />
+        </Col>
       </Row>
     </>
   );
