@@ -1,4 +1,4 @@
-![示例图](https://s3.bmp.ovh/imgs/2025/03/20/19a19de17145a58a.png)
+![示例图](https://s3.bmp.ovh/imgs/2025/04/09/1bd5f0221a43e846.png)
 
 # Ant Design Pro
 
