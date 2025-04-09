@@ -67,7 +67,11 @@ const TopList: React.FC = () => {
         {row.map((category) => (
           <Col xl={8} lg={12} md={12} sm={24} xs={24} key={category.title}>
             <div className={styles.salesRank}>
-              <h4 className={styles.rankingTitle}>{category.title}</h4>
+              <h2 className={styles.rankingTitle}>
+                <strong>
+                  <strong>{category.title}</strong>
+                </strong>
+              </h2>
               <ul className={styles.rankingList}>
                 {category.collection.map((item, i) => (
                   <li key={item.reseau}>
