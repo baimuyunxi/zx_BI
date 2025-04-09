@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, FloatButton } from 'antd';
 import MiddleRightMap from '@/pages/Welcome/Parietal/Middle/Map';
 import LeftStats from '@/pages/Welcome/Parietal/Left/fullService';
 import MyWordCloud from '@/pages/Welcome/Parietal/Right/WordCloud';
@@ -8,6 +8,7 @@ import EnterpriseBarChart from '@/pages/Welcome/Parietal/Right/Enterprise';
 import Target from '@/pages/Welcome/Parietal/Middle/Target';
 import EnStats from '@/pages/Welcome/Parietal/Left/enterprise';
 import TopList from '@/pages/Welcome/TopTable';
+import { SyncOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
   // 定义整体高度常量，保证各列一致
@@ -134,6 +135,7 @@ const Dashboard = () => {
           <TopList />
         </Col>
       </Row>
+      <FloatButton icon={<SyncOutlined />} onClick={() => console.log('onClick')} />
     </>
   );
 };
