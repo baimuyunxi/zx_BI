@@ -21,11 +21,16 @@ const Dashboard = () => {
   const [renderCount, setRenderCount] = useState(0);
   // 使用ref保存上一次选中的城市，用于比较
   const prevSelectedCityRef = useRef(null);
+  // 使用ref来存储定时器ID，便于清理
+  const timerRef = useRef(null);
+  // 使用ref记录上次刷新时间，避免重复刷新
+  const lastRefreshTimeRef = useRef(0);
 
   // 获取数据的函数
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
+      console.log('开始获取Dashboard数据...');
       const data = await getWelcomeData();
       setDashboardData(data);
       // 重置选中的地市
@@ -33,6 +38,9 @@ const Dashboard = () => {
       prevSelectedCityRef.current = null;
       // 增加渲染计数，强制重新渲染
       setRenderCount((prev) => prev + 1);
+      // 更新最后刷新时间
+      lastRefreshTimeRef.current = Date.now();
+      console.log('Dashboard数据获取成功，时间:', new Date().toLocaleTimeString());
     } catch (error) {
       console.error('获取Dashboard数据失败:', error);
     } finally {
@@ -40,10 +48,61 @@ const Dashboard = () => {
     }
   };
 
-  // 初始加载和刷新按钮的回调
-  useEffect(() => {
-    fetchDashboardData();
+  // 检查是否应该自动刷新的函数
+  const checkAutoRefresh = useCallback(() => {
+    const now = new Date();
+    const minute = now.getMinutes();
+
+    // 检查当前分钟是否是5的倍数
+    if (minute % 5 === 0) {
+      // 确保在同一分钟内不会重复刷新
+      const currentTime = Date.now();
+      if (currentTime - lastRefreshTimeRef.current > 4 * 60 * 1000) {
+        // 至少间隔4分钟
+        console.log('自动刷新触发，当前时间:', now.toLocaleTimeString());
+        fetchDashboardData();
+      }
+    }
   }, []);
+
+  // 初始加载和设置自动刷新
+  useEffect(() => {
+    // 初始加载数据
+    fetchDashboardData();
+
+    // 设置定时器，每分钟检查一次是否需要刷新
+    // @ts-ignore
+    timerRef.current = setInterval(() => {
+      checkAutoRefresh();
+    }, 60 * 1000); // 每分钟检查一次
+
+    // 立即进行一次检查，以防初始加载时正好是刷新时间
+    checkAutoRefresh();
+
+    // 清理函数
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [checkAutoRefresh]);
+
+  // 页面可见性变化检测 - 当页面从隐藏变为可见时，检查是否需要刷新
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('页面变为可见，检查是否需要刷新');
+        checkAutoRefresh();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [checkAutoRefresh]);
 
   // 处理刷新按钮点击
   const handleRefresh = () => {
