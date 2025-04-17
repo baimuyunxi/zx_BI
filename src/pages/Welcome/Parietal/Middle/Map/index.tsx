@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import * as echarts from 'echarts';
 import { Spin } from 'antd';
+import hunanJson from './430000_full.json';
 
 // 城市与localNet代码的映射关系
 const CITY_CODE_MAP = {
@@ -26,7 +27,7 @@ interface MiddleRightMapProps {
   enterpriseData?: any[];
   onCityClick?: (cityData: any) => void;
   loading?: boolean;
-  selectedCity?: any | null; // 添加selectedCity属性
+  selectedCity?: any | null;
 }
 
 const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
@@ -34,27 +35,18 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
   enterpriseData = [],
   onCityClick,
   loading = false,
-  selectedCity = null, // 接收从父组件传入的selectedCity
+  selectedCity = null,
 }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
-  // 使用ref来存储城市数据，避免因数据变化导致的不必要重渲染
   const cityDataRef = useRef<any[]>([]);
-
-  // 使用ref记录内部选中状态
   const internalSelectedRef = useRef(null);
-
-  // 从外部selectedCity中获取当前选中的城市名称
   const selectedCityName = selectedCity ? selectedCity.name : null;
 
-  // 使用useEffect记录选中状态变化，方便调试
+  // 处理选中状态变化
   useEffect(() => {
     console.log('Map组件收到新的selectedCity:', selectedCity ? selectedCity.name : '无');
-
-    // 当外部selectedCity变化时，更新内部状态
     internalSelectedRef.current = selectedCity;
-
-    // 更新地图选中状态
     if (chartInstance.current) {
       updateChartSelection();
     }
@@ -139,8 +131,7 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         internalSelectedRef.current = null;
 
         // 清除地图选中状态
-        // @ts-ignore
-        chart.dispatchAction({
+        chart?.dispatchAction({
           type: 'map-unselect',
           seriesIndex: 0,
         });
@@ -157,14 +148,12 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         internalSelectedRef.current = clickInfo;
 
         // 更新地图选中状态
-        // @ts-ignore
-        chart.dispatchAction({
+        chart?.dispatchAction({
           type: 'map-unselect',
           seriesIndex: 0,
         });
 
-        // @ts-ignore
-        chart.dispatchAction({
+        chart?.dispatchAction({
           type: 'map-select',
           seriesIndex: 0,
           name: clickedCityName,
@@ -218,114 +207,98 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
       chart = echarts.init(chartRef.current);
       chartInstance.current = chart;
 
-      chart.showLoading();
+      // 直接使用导入的JSON数据，不再使用fetch
+      // @ts-ignore
+      echarts.registerMap('hunan', hunanJson);
 
-      // 加载地图数据
-      fetch('https://geo.datav.aliyun.com/areas_v3/bound/430000_full.json')
-        .then((response) => response.json())
-        .then((hunanJson) => {
-          if (!chart) return;
+      // 设置图表选项
+      const option = {
+        title: {
+          left: 'right',
+        },
+        tooltip: {
+          trigger: 'item',
+          showDelay: 0,
+          transitionDuration: 0.2,
+          formatter: function (params: { name: any; value: any }) {
+            const cityInfo = cityDataRef.current.find((city) => city.name === params.name);
+            if (!cityInfo) return `${params.name}<br/>工单总量: ${params.value || 0}`;
 
-          chart.hideLoading();
-          echarts.registerMap('hunan', hunanJson);
-
-          // 设置图表选项
-          const option = {
-            title: {
-              left: 'right',
-            },
-            tooltip: {
-              trigger: 'item',
-              showDelay: 0,
-              transitionDuration: 0.2,
-              formatter: function (params: { name: any; value: any }) {
-                const cityInfo = cityDataRef.current.find((city) => city.name === params.name);
-                if (!cityInfo) return `${params.name}<br/>工单总量: ${params.value || 0}`;
-
-                return `
-<!--                  ${params.name} (${cityInfo.region})<br/>-->
-<!--                  工单总量: ${cityInfo.value || 0}<br/>-->
-                  全业务工单: ${cityInfo.allServiceTotal || 0}<br/>
-                  政企故障工单: ${cityInfo.enterpriseTotal || 0}
-                `;
-              },
-            },
-            visualMap: {
-              left: 'right',
-              min: 0,
-              max: Math.max(...cityData.map((city) => city.value), 100), // 动态设置最大值
-              inRange: {
-                color: ['#B8E1FF', '#7DAAFF', '#3D76DD', '#0047A5', '#001D70'],
-              },
-              text: ['高', '低'],
-              calculable: true,
-            },
-            toolbox: {
+            return `
+              全业务工单: ${cityInfo.allServiceTotal || 0}<br/>
+              政企故障工单: ${cityInfo.enterpriseTotal || 0}
+            `;
+          },
+        },
+        visualMap: {
+          left: 'right',
+          min: 0,
+          max: Math.max(...cityData.map((city) => city.value), 100), // 动态设置最大值
+          inRange: {
+            color: ['#B8E1FF', '#7DAAFF', '#3D76DD', '#0047A5', '#001D70'],
+          },
+          text: ['高', '低'],
+          calculable: true,
+        },
+        toolbox: {
+          show: true,
+          left: 'left',
+          top: 'top',
+          feature: {
+            dataView: { readOnly: false },
+            restore: {},
+            saveAsImage: {},
+          },
+        },
+        series: [
+          {
+            name: '湖南省数据',
+            type: 'map',
+            roam: true,
+            map: 'hunan',
+            label: {
               show: true,
-              left: 'left',
-              top: 'top',
-              feature: {
-                dataView: { readOnly: false },
-                restore: {},
-                saveAsImage: {},
+              fontSize: 12,
+              color: '#ffffff',
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 14,
+                color: '#000',
               },
             },
-            series: [
-              {
-                name: '湖南省数据',
-                type: 'map',
-                roam: true,
-                map: 'hunan',
-                label: {
-                  show: true,
-                  fontSize: 12,
-                  color: '#ffffff',
-                },
-                emphasis: {
-                  label: {
-                    show: true,
-                    fontSize: 14,
-                    color: '#000',
-                  },
-                },
-                data: cityData,
-                itemStyle: {
-                  areaColor: '#B8E1FF',
-                  borderColor: '#000000',
-                  borderWidth: 1,
-                },
-                aspectScale: 0.85, // 调整地图的宽高比
-                layoutCenter: ['50%', '50%'], // 地图居中
-                layoutSize: '100%', // 地图大小占满容器
-                select: {
-                  label: {
-                    show: true,
-                    color: '#000',
-                  },
-                  itemStyle: {
-                    areaColor: '#FFFF00',
-                  },
-                },
+            data: cityData,
+            itemStyle: {
+              areaColor: '#B8E1FF',
+              borderColor: '#000000',
+              borderWidth: 1,
+            },
+            aspectScale: 0.85, // 调整地图的宽高比
+            layoutCenter: ['50%', '50%'], // 地图居中
+            layoutSize: '100%', // 地图大小占满容器
+            select: {
+              label: {
+                show: true,
+                color: '#000',
               },
-            ],
-          };
+              itemStyle: {
+                areaColor: '#FFFF00',
+              },
+            },
+          },
+        ],
+      };
 
-          chart.setOption(option);
+      chart.setOption(option);
 
-          // 添加点击事件
-          chart.on('click', (params) => handleMapClick(params, chart));
+      // 添加点击事件
+      chart.on('click', (params) => handleMapClick(params, chart));
 
-          // 设置初始选中状态
-          setTimeout(() => {
-            updateChartSelection();
-          }, 100);
-        })
-        .catch((error) => {
-          console.error('加载地图数据失败:', error);
-          if (chart) {
-            chart.hideLoading();
-          }
-        });
+      // 设置初始选中状态
+      setTimeout(() => {
+        updateChartSelection();
+      }, 100);
     };
 
     // 初始化图表
