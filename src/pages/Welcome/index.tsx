@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, FloatButton } from 'antd';
+import { getWelcomeData } from './service'; // 导入刚刚创建的函数
 import MiddleRightMap from '@/pages/Welcome/Parietal/Middle/Map';
 import LeftStats from '@/pages/Welcome/Parietal/Left/fullService';
 import MyWordCloud from '@/pages/Welcome/Parietal/Right/WordCloud';
@@ -11,6 +12,33 @@ import TopList from '@/pages/Welcome/TopTable';
 import { SyncOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
+  // 添加状态来存储数据
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 获取数据的函数
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      const data = await getWelcomeData();
+      setDashboardData(data);
+    } catch (error) {
+      console.error('获取Dashboard数据失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 初始加载和刷新按钮的回调
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  // 处理刷新按钮点击
+  const handleRefresh = () => {
+    fetchDashboardData();
+  };
+
   // 定义整体高度常量，保证各列一致
   const columnHeight = 'calc(100vh - 120px)';
 
@@ -113,7 +141,9 @@ const Dashboard = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>
                 <Card title="工单词云" bodyStyle={{ padding: '12px' }}>
-                  <MyWordCloud />
+                  {/* 传递词云数据 */}
+                  {/* @ts-ignore*/}
+                  <MyWordCloud wordCloudData={dashboardData?.wordClouds || []} loading={loading} />
                 </Card>
               </Col>
               <Col span={24}>
@@ -132,10 +162,12 @@ const Dashboard = () => {
       </Row>
       <Row gutter={[16, 16]} style={{ paddingTop: '16px' }}>
         <Col span={24}>
-          <TopList />
+          {/* 传递TopList所需的gridTop数据 */}
+          {/* @ts-ignore*/}
+          <TopList gridTopData={dashboardData?.gridTop || {}} loading={loading} />
         </Col>
       </Row>
-      <FloatButton icon={<SyncOutlined />} onClick={() => console.log('onClick')} />
+      <FloatButton icon={<SyncOutlined />} onClick={handleRefresh} tooltip="刷新数据" />
     </>
   );
 };
