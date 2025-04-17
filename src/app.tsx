@@ -140,6 +140,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
-  baseURL: 'http://134.175.150.182:14786',
+  baseURL: 'http://127.0.0.1:38291',
   ...errorConfig,
 };
