@@ -111,29 +111,17 @@ const Target: React.FC<TargetProps> = ({
       <Row gutter={[16, 16]} style={{ marginTop: '16px' }}>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic
-              title={`工单总量${selectedCity ? ` (${selectedCity.region})` : ''}`}
-              value={stats.totalTickets}
-              formatter={formatter}
-            />
+            <Statistic title={`工单总量`} value={stats.totalTickets} formatter={formatter} />
           </Card>
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic
-              title={`政企故障工单${selectedCity ? ` (${selectedCity.region})` : ''}`}
-              value={stats.enterpriseTotal}
-              formatter={formatter}
-            />
+            <Statistic title={`政企故障工单`} value={stats.enterpriseTotal} formatter={formatter} />
           </Card>
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic
-              title={`全业务工单${selectedCity ? ` (${selectedCity.region})` : ''}`}
-              value={stats.allServiceTotal}
-              formatter={formatter}
-            />
+            <Statistic title={`全业务工单`} value={stats.allServiceTotal} formatter={formatter} />
           </Card>
         </Col>
       </Row>

@@ -243,8 +243,8 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
                 if (!cityInfo) return `${params.name}<br/>工单总量: ${params.value || 0}`;
 
                 return `
-                  ${params.name} (${cityInfo.region})<br/>
-                  工单总量: ${cityInfo.value || 0}<br/>
+<!--                  ${params.name} (${cityInfo.region})<br/>-->
+<!--                  工单总量: ${cityInfo.value || 0}<br/>-->
                   全业务工单: ${cityInfo.allServiceTotal || 0}<br/>
                   政企故障工单: ${cityInfo.enterpriseTotal || 0}
                 `;
