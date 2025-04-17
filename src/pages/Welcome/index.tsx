@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Row, Col, Card, FloatButton } from 'antd';
 import { getWelcomeData } from './service'; // 导入刚刚创建的函数
 import MiddleRightMap from '@/pages/Welcome/Parietal/Middle/Map';
@@ -15,6 +15,12 @@ const Dashboard = () => {
   // 添加状态来存储数据
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  // 添加状态来存储选中的地市
+  const [selectedCity, setSelectedCity] = useState(null);
+  // 添加计数器状态，用于强制更新Target组件
+  const [renderCount, setRenderCount] = useState(0);
+  // 使用ref保存上一次选中的城市，用于比较
+  const prevSelectedCityRef = useRef(null);
 
   // 获取数据的函数
   const fetchDashboardData = async () => {
@@ -22,6 +28,11 @@ const Dashboard = () => {
     try {
       const data = await getWelcomeData();
       setDashboardData(data);
+      // 重置选中的地市
+      setSelectedCity(null);
+      prevSelectedCityRef.current = null;
+      // 增加渲染计数，强制重新渲染
+      setRenderCount((prev) => prev + 1);
     } catch (error) {
       console.error('获取Dashboard数据失败:', error);
     } finally {
@@ -38,6 +49,51 @@ const Dashboard = () => {
   const handleRefresh = () => {
     fetchDashboardData();
   };
+
+  // 处理地图城市点击事件
+  const handleCityClick = useCallback(
+    (cityData: React.SetStateAction<null>) => {
+      console.log('Dashboard收到点击事件:', cityData ? cityData.name : '取消选择');
+      // @ts-ignore
+      console.log('当前选中城市:', selectedCity ? selectedCity.name : '无');
+      console.log(
+        '上一次选中城市:',
+        // @ts-ignore
+        prevSelectedCityRef.current ? prevSelectedCityRef.current.name : '无',
+      );
+
+      // 检查是否点击的是已选中的城市
+      if (cityData === null) {
+        // 如果传入null，意味着清除选择
+        console.log('清除选择');
+        setSelectedCity(null);
+        prevSelectedCityRef.current = null;
+        // @ts-ignore
+      } else if (selectedCity && selectedCity.name === cityData.name) {
+        // 如果点击的是当前已选中的城市，取消选择
+        console.log('取消选中当前城市');
+        setSelectedCity(null);
+        prevSelectedCityRef.current = null;
+      } else {
+        // 选择新城市
+        console.log('选择新城市:', cityData.name);
+        setSelectedCity(cityData);
+        // @ts-ignore
+        prevSelectedCityRef.current = cityData;
+      }
+
+      // 增加渲染计数，强制Target组件重新渲染
+      setRenderCount((prev) => prev + 1);
+    },
+    [selectedCity],
+  );
+
+  // 输出调试信息
+  useEffect(() => {
+    // @ts-ignore
+    console.log('Dashboard组件更新，selectedCity:', selectedCity ? selectedCity.name : '无');
+    console.log('renderCount:', renderCount);
+  }, [selectedCity, renderCount]);
 
   // 定义整体高度常量，保证各列一致
   const columnHeight = 'calc(100vh - 120px)';
@@ -89,6 +145,11 @@ const Dashboard = () => {
     }
   `;
 
+  // 为Target生成唯一的key，确保在选中状态变化时强制重新渲染
+  // @ts-ignore
+  const targetKey = `target-${selectedCity ? selectedCity.localNet : 'all'}-${renderCount}`;
+  console.log('生成的Target Key:', targetKey);
+
   return (
     <>
       {/* 添加内联样式标签 */}
@@ -120,7 +181,15 @@ const Dashboard = () => {
           <div style={middleColumnStyle}>
             {/* Target 组件区域 */}
             <div>
-              <Target />
+              <Target
+                // @ts-ignore
+                allServiceData={dashboardData?.allService || []}
+                // @ts-ignore
+                enterpriseData={dashboardData?.enterprise || []}
+                selectedCity={selectedCity}
+                loading={loading}
+                key={targetKey} // 使用复合key确保重新渲染
+              />
             </div>
 
             {/* 地图区域 - 使用flex:1填充剩余空间 */}
@@ -128,7 +197,15 @@ const Dashboard = () => {
             <div style={mapContainerStyle}>
               {/* @ts-ignore*/}
               <Card style={mapCardStyle} bodyStyle={mapCardBodyStyle}>
-                <MiddleRightMap />
+                <MiddleRightMap
+                  // @ts-ignore
+                  allServiceData={dashboardData?.allService || []}
+                  // @ts-ignore
+                  enterpriseData={dashboardData?.enterprise || []}
+                  onCityClick={handleCityClick}
+                  loading={loading}
+                  selectedCity={selectedCity} // 添加selectedCity属性，确保地图组件知道当前选中的城市
+                />
               </Card>
             </div>
           </div>
