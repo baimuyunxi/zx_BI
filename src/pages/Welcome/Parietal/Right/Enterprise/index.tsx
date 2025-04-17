@@ -125,17 +125,28 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
           },
         },
       ],
-      dataZoom: [
-        {
-          type: 'inside',
-          start: 0,
-          end: 20,
+      label: {
+        show: true,
+        position: 'top',
+        // formatter: '{c}',
+        fontSize: 12,
+        color: '#333',
+        // 当数值为0时不显示标签
+        formatter: function (params: { value: number }) {
+          return params.value > 0 ? params.value : '';
         },
-        {
-          start: 0,
-          end: 20,
-        },
-      ],
+      },
+      // dataZoom: [
+      //   {
+      //     type: 'inside',
+      //     start: 0,
+      //     end: 20,
+      //   },
+      //   {
+      //     start: 0,
+      //     end: 20,
+      //   },
+      // ],
     };
 
     // 设置配置并渲染图表
