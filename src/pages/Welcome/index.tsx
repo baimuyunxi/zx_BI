@@ -225,12 +225,24 @@ const Dashboard = () => {
               </Col>
               <Col span={24}>
                 <Card title="全业务队列工单" bodyStyle={{ padding: '12px' }}>
-                  <StackedBarChart />
+                  {/* 传递全业务数据和选中城市 */}
+                  <StackedBarChart
+                    // @ts-ignore
+                    allServiceData={dashboardData?.allService || []}
+                    selectedCity={selectedCity}
+                    loading={loading}
+                  />
                 </Card>
               </Col>
               <Col span={24}>
                 <Card title="政企故障工单" bodyStyle={{ padding: '12px' }}>
-                  <EnterpriseBarChart />
+                  {/* 传递政企故障数据和选中城市 */}
+                  <EnterpriseBarChart
+                    // @ts-ignore
+                    enterpriseData={dashboardData?.enterprise || []}
+                    selectedCity={selectedCity}
+                    loading={loading}
+                  />
                 </Card>
               </Col>
             </Row>
