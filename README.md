@@ -1,3 +1,16 @@
+<h1 align="center">数据可视化大屏</h1>
+<div align="center" style="margin-bottom:16px;">
+
+  ---
+
+![](https://badgen.net/badge/icon/Ant%20Design?icon=https://gw.alipayobjects.com/zos/antfincdn/Pp4WPgVDB3/KDpgvguMpGfqaHPjicRK.svg&label)
+<img src="https://img.shields.io/badge/React-18.2.0-blued" />
+<img src="https://img.shields.io/badge/TypeScript-5.8.3-green" />
+</div>
+
+
+
+
 ![示例图](https://s3.bmp.ovh/imgs/2025/04/18/9da78a7a7d4e60af.png)
 
 # Ant Design Pro
@@ -20,7 +33,8 @@ yarn
 
 ## Provided Scripts
 
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
+Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and
+test.
 
 Scripts provided in `package.json`. It's safe to modify or add additional script:
 
@@ -56,4 +70,5 @@ npm test
 
 ## More
 
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in
+our [github](https://github.com/ant-design/ant-design-pro).
