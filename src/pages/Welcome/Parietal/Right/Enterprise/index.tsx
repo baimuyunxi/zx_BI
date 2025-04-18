@@ -172,6 +172,9 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
   }, [enterpriseData, selectedCity]); // 依赖项包括数据和选中城市
 
   if (loading) {
+    if (chartInstance.current) {
+      chartInstance.current.dispose();
+    }
     return (
       <div
         style={{
