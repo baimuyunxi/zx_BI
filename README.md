@@ -1,5 +1,9 @@
 <h1 align="center">数据可视化大屏</h1>
-<div align="center" style="margin-bottom:16px;">
+
+<p align="center">
+  将可视化大屏、报表和阈值预警相结合
+</p>
+<div align="center">
 
   ---
 
