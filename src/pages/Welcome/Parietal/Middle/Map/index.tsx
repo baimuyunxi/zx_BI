@@ -324,6 +324,11 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
   }, [cityData]); // 移除 selectedCityName 作为依赖项，通过单独的useEffect处理
 
   if (loading) {
+    // 如果已经存在图表实例，则销毁它以确保干净的重新创建
+    if (chartInstance.current) {
+      chartInstance.current.dispose();
+      chartInstance.current = null;
+    }
     return (
       <div
         style={{

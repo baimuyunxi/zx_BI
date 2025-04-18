@@ -164,6 +164,10 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   }, [allServiceData, selectedCity]); // 依赖项包括数据和选中城市
 
   if (loading) {
+    // 如果实例已存在，先销毁
+    if (chartInstance.current) {
+      chartInstance.current.dispose();
+    }
     return (
       <div
         style={{
