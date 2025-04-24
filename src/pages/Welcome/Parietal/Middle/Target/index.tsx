@@ -58,12 +58,13 @@ const Target: React.FC<TargetProps> = ({
       );
     }, 0);
 
-    // 计算政企故障工单总数
+    // 计算政企故障工单总数 - 更新为包含count和noCnt的总和
     const enterpriseTotal = filteredEnterprise.reduce((total, region) => {
       return (
         total +
         (region.productTypes?.reduce(
-          (sum: any, product: { count: any }) => sum + (product.count || 0),
+          (sum: any, product: { count: any; noCnt: any }) =>
+            sum + (product.count || 0) + (product.noCnt || 0),
           0,
         ) || 0)
       );
@@ -97,12 +98,12 @@ const Target: React.FC<TargetProps> = ({
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title="10009队列" value={stats.queue10009} formatter={formatter} />
+            <Statistic title="10009来话" value={stats.queue10009} formatter={formatter} />
           </Card>
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title="全业务队列" value={stats.allBusinessQueue} formatter={formatter} />
+            <Statistic title="10000政企来话" value={stats.allBusinessQueue} formatter={formatter} />
           </Card>
         </Col>
       </Row>
@@ -116,12 +117,16 @@ const Target: React.FC<TargetProps> = ({
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title={`政企故障工单`} value={stats.enterpriseTotal} formatter={formatter} />
+            <Statistic
+              title={`政企查询/投诉/商机工单`}
+              value={stats.allServiceTotal}
+              formatter={formatter}
+            />
           </Card>
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title={`全业务工单`} value={stats.allServiceTotal} formatter={formatter} />
+            <Statistic title={`政企故障工单`} value={stats.enterpriseTotal} formatter={formatter} />
           </Card>
         </Col>
       </Row>
