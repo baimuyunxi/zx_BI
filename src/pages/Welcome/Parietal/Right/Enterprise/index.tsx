@@ -50,11 +50,16 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
       // 将产品类型转换为数组并排序
       const productArray = Array.from(allProducts).sort();
 
-      // 计算每种产品类型的总数
+      // 计算每种产品类型的count和noCnt值
       const productCountMap = {};
+      const productNoCntMap = {};
+
       productArray.forEach((product) => {
         // @ts-ignore
         productCountMap[product] = 0;
+        // @ts-ignore
+        productNoCntMap[product] = 0;
+
         targetData.forEach((item) => {
           if (item.productTypes) {
             const productItem = item.productTypes.find(
@@ -63,6 +68,8 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
             if (productItem) {
               // @ts-ignore
               productCountMap[product] += productItem.count || 0;
+              // @ts-ignore
+              productNoCntMap[product] += productItem.noCnt || 0;
             }
           }
         });
@@ -71,15 +78,18 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
       // 生成对应的数据和类型数组
       const xData = productArray;
       // @ts-ignore
-      const seriesData = productArray.map((product) => productCountMap[product]);
+      const countData = productArray.map((product) => productCountMap[product]);
+      // @ts-ignore
+      const noCntData = productArray.map((product) => productNoCntMap[product]);
 
       return {
         xData,
-        seriesData,
+        countData,
+        noCntData,
       };
     };
 
-    const { xData, seriesData } = processData();
+    const { xData, countData, noCntData } = processData();
 
     // 设置图表配置
     const option = {
@@ -89,10 +99,14 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
           type: 'shadow',
         },
       },
+      legend: {
+        data: ['故障专席受理', '非故障专席受理'],
+        top: 0,
+      },
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '10%',
         containLabel: true,
       },
       xAxis: [
@@ -113,40 +127,42 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
       ],
       series: [
         {
-          name: '工单数量',
+          name: '故障专席受理',
           type: 'bar',
-          stack: 'Ad',
+          stack: 'total',
           emphasis: {
             focus: 'series',
           },
-          data: seriesData,
-          itemStyle: {
-            color: '#91cc75',
+          data: countData,
+          label: {
+            show: true,
+            position: 'inside',
+            formatter: function (params: { value: number }) {
+              return params.value > 0 ? params.value : '';
+            },
+            fontSize: 12,
+            color: '#fff',
+          },
+        },
+        {
+          name: '非故障专席受理',
+          type: 'bar',
+          stack: 'total',
+          emphasis: {
+            focus: 'series',
+          },
+          data: noCntData,
+          label: {
+            show: true,
+            position: 'inside',
+            formatter: function (params: { value: number }) {
+              return params.value > 0 ? params.value : '';
+            },
+            fontSize: 12,
+            color: '#fff',
           },
         },
       ],
-      label: {
-        show: true,
-        position: 'top',
-        // formatter: '{c}',
-        fontSize: 12,
-        color: '#333',
-        // 当数值为0时不显示标签
-        formatter: function (params: { value: number }) {
-          return params.value > 0 ? params.value : '';
-        },
-      },
-      // dataZoom: [
-      //   {
-      //     type: 'inside',
-      //     start: 0,
-      //     end: 20,
-      //   },
-      //   {
-      //     start: 0,
-      //     end: 20,
-      //   },
-      // ],
     };
 
     // 设置配置并渲染图表

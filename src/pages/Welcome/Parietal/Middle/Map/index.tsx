@@ -74,10 +74,10 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         productTypes: [],
       };
 
-      // 计算enterprise中该城市的count总和
+      // 计算enterprise中该城市的count和noCnt总和
       const enterpriseTotal =
-        enterpriseRegion.productTypes?.reduce((total: any, product: { count: any }) => {
-          return total + (product.count || 0);
+        enterpriseRegion.productTypes?.reduce((total: any, product: { count: any; noCnt: any }) => {
+          return total + (product.count || 0) + (product.noCnt || 0);
         }, 0) || 0;
 
       // 计算总工单数

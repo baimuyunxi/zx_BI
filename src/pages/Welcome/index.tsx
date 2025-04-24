@@ -221,12 +221,12 @@ const Dashboard = () => {
           <div style={scrollableColumnStyle} className="hide-scrollbar">
             <Row gutter={[0, 16]}>
               <Col span={24}>
-                <Card title="万号全业务队列" bodyStyle={{ padding: '12px' }}>
+                <Card title="10000政企来话" bodyStyle={{ padding: '12px' }}>
                   <LeftStats />
                 </Card>
               </Col>
               <Col span={24}>
-                <Card title="10009故障队列">
+                <Card title="10009来话">
                   <EnStats />
                 </Card>
               </Col>
@@ -283,7 +283,7 @@ const Dashboard = () => {
                 </Card>
               </Col>
               <Col span={24}>
-                <Card title="全业务队列工单" bodyStyle={{ padding: '12px' }}>
+                <Card title="政企查询/投诉/商机工单" bodyStyle={{ padding: '12px' }}>
                   {/* 传递全业务数据和选中城市 */}
                   <StackedBarChart
                     // @ts-ignore
