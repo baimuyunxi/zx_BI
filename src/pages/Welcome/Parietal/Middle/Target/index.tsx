@@ -117,16 +117,16 @@ const Target: React.FC<TargetProps> = ({
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Card variant="borderless">
-            <Statistic title={`政企故障工单`} value={stats.enterpriseTotal} formatter={formatter} />
-          </Card>
-        </Col>
-        <Col md={8} sm={12} xs={24}>
-          <Card variant="borderless">
             <Statistic
               title={`政企查询/投诉/商机工单`}
               value={stats.allServiceTotal}
               formatter={formatter}
             />
+          </Card>
+        </Col>
+        <Col md={8} sm={12} xs={24}>
+          <Card variant="borderless">
+            <Statistic title={`政企故障工单`} value={stats.enterpriseTotal} formatter={formatter} />
           </Card>
         </Col>
       </Row>

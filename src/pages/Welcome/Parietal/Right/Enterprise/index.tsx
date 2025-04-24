@@ -53,12 +53,15 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
       // 计算每种产品类型的count和noCnt值
       const productCountMap = {};
       const productNoCntMap = {};
+      const productTotalMap = {}; // 添加总量映射
 
       productArray.forEach((product) => {
         // @ts-ignore
         productCountMap[product] = 0;
         // @ts-ignore
         productNoCntMap[product] = 0;
+        // @ts-ignore
+        productTotalMap[product] = 0;
 
         targetData.forEach((item) => {
           if (item.productTypes) {
@@ -66,10 +69,14 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
               (p: { products: string }) => p.products === product,
             );
             if (productItem) {
+              const count = productItem.count || 0;
+              const noCnt = productItem.noCnt || 0;
               // @ts-ignore
-              productCountMap[product] += productItem.count || 0;
+              productCountMap[product] += count;
               // @ts-ignore
-              productNoCntMap[product] += productItem.noCnt || 0;
+              productNoCntMap[product] += noCnt;
+              // @ts-ignore
+              productTotalMap[product] += count + noCnt;
             }
           }
         });
@@ -81,15 +88,18 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
       const countData = productArray.map((product) => productCountMap[product]);
       // @ts-ignore
       const noCntData = productArray.map((product) => productNoCntMap[product]);
+      // @ts-ignore
+      const totalData = productArray.map((product) => productTotalMap[product]);
 
       return {
         xData,
         countData,
         noCntData,
+        totalData,
       };
     };
 
-    const { xData, countData, noCntData } = processData();
+    const { xData, countData, noCntData, totalData } = processData();
 
     // 设置图表配置
     const option = {
@@ -134,14 +144,9 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
             focus: 'series',
           },
           data: countData,
+          // 移除内部标签
           label: {
-            show: true,
-            position: 'inside',
-            formatter: function (params: { value: number }) {
-              return params.value > 0 ? params.value : '';
-            },
-            fontSize: 12,
-            color: '#fff',
+            show: false,
           },
         },
         {
@@ -152,15 +157,46 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
             focus: 'series',
           },
           data: noCntData,
+          // 移除内部标签
           label: {
-            show: true,
-            position: 'inside',
-            formatter: function (params: { value: number }) {
-              return params.value > 0 ? params.value : '';
-            },
-            fontSize: 12,
-            color: '#fff',
+            show: false,
           },
+          // 添加总量标签
+          itemStyle: {
+            borderRadius: [5, 5, 0, 0], // 顶部圆角
+          },
+        },
+        // 添加标签系列用于显示总量
+        {
+          name: '总计',
+          type: 'custom',
+          renderItem: function (
+            params: any,
+            api: { value: (arg0: number) => any; coord: (arg0: any[]) => any },
+          ) {
+            const xValue = api.value(0);
+            const yValue = api.value(1);
+
+            const location = api.coord([xValue, yValue]);
+
+            return {
+              type: 'text',
+              style: {
+                text: yValue > 0 ? yValue : '',
+                x: location[0],
+                y: location[1],
+                textAlign: 'center',
+                textVerticalAlign: 'bottom',
+                // textFill: '#333',
+                fontSize: 12,
+                // fontWeight: 'bold',
+              },
+            };
+          },
+          data: totalData.map((value, index) => {
+            return [index, value];
+          }),
+          z: 10,
         },
       ],
     };
