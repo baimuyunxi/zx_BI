@@ -33,3 +33,10 @@ export async function getWelcomeData(): Promise<any> {
   });
   return response.data;
 }
+
+export async function getDetailsOrder(): Promise<any> {
+  const response = await fetchAPI('/detailsOrder', {
+    method: 'POST',
+  });
+  return response.data;
+}
