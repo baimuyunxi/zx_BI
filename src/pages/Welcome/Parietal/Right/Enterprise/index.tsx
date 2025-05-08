@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { Spin } from 'antd';
+import PopUpTable from '@/pages/Welcome/Drill/OrderPopUp';
+import { DetailOrderParams } from '@/pages/Welcome/service';
 
 interface EnterpriseBarChartProps {
   enterpriseData?: any[];
@@ -15,6 +17,15 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
 }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
+
+  // 添加状态控制弹窗显示
+  const [popupVisible, setPopupVisible] = useState(false);
+  // 添加状态存储当前点击的服务类型和查询参数
+  const [currentParams, setCurrentParams] = useState<DetailOrderParams>({
+    order: 'fault', // 政企故障工单类型为fault
+    network: '',
+    mold: '',
+  });
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -100,6 +111,33 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
     };
 
     const { xData, countData, noCntData, totalData } = processData();
+
+    // 添加点击事件处理函数
+    const handleBarClick = (params: any) => {
+      // 获取点击的柱状图类型（产品类型）
+      const productType = xData[params.dataIndex];
+      console.log(
+        '点击了柱状图:',
+        productType,
+        '索引:',
+        params.dataIndex,
+        '系列名:',
+        params.seriesName,
+      );
+
+      // 设置请求参数
+      const requestParams: DetailOrderParams = {
+        order: 'fault', // 政企故障工单设置为fault
+        network: selectedCity ? selectedCity.localNet : '', // 如果有选中城市，使用其localNet
+        mold: productType,
+      };
+
+      console.log('发送请求参数:', requestParams);
+
+      // 更新当前参数并显示弹窗
+      setCurrentParams(requestParams);
+      setPopupVisible(true);
+    };
 
     // 设置图表配置
     const option = {
@@ -204,6 +242,9 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
     // 设置配置并渲染图表
     chartInstance.current.setOption(option);
 
+    // 注册点击事件
+    chartInstance.current.on('click', 'series', handleBarClick);
+
     // 处理窗口大小变化时的自适应
     const handleResize = () => {
       if (chartInstance.current) {
@@ -217,11 +258,17 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
       if (chartInstance.current) {
+        chartInstance.current.off('click');
         chartInstance.current.dispose();
         chartInstance.current = null;
       }
     };
   }, [enterpriseData, selectedCity]); // 依赖项包括数据和选中城市
+
+  // 处理弹窗关闭
+  const handlePopupCancel = () => {
+    setPopupVisible(false);
+  };
 
   if (loading) {
     if (chartInstance.current) {
@@ -242,7 +289,14 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
     );
   }
 
-  return <div ref={chartRef} style={{ width: '100%', height: '420px' }} />;
+  return (
+    <>
+      <div ref={chartRef} style={{ width: '100%', height: '420px' }} />
+
+      {/* 工单详情弹窗 */}
+      <PopUpTable visible={popupVisible} onCancel={handlePopupCancel} params={currentParams} />
+    </>
+  );
 };
 
 export default EnterpriseBarChart;

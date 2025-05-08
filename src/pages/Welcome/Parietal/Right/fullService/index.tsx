@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { Spin } from 'antd';
+import PopUpTable from '@/pages/Welcome/Drill/OrderPopUp';
+import { DetailOrderParams } from '@/pages/Welcome/service';
 
 interface StackedBarChartProps {
   allServiceData?: any[];
@@ -15,6 +17,14 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
 }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
+  // 添加状态控制弹窗显示
+  const [popupVisible, setPopupVisible] = useState(false);
+  // 添加状态存储当前点击的服务类型和查询参数
+  const [currentParams, setCurrentParams] = useState<DetailOrderParams>({
+    order: 'other',
+    network: '',
+    mold: '',
+  });
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -78,6 +88,24 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     };
 
     const { xData, seriesData } = processData();
+
+    // 添加点击事件处理
+    const handleBarClick = (params: any) => {
+      // 获取点击的柱状图类型（服务类型）
+      const serviceType = params.name;
+      // 设置请求参数
+      const requestParams: DetailOrderParams = {
+        order: 'other', // 默认为other
+        network: selectedCity ? selectedCity.localNet : '', // 如果有选中城市，使用其localNet
+        mold: serviceType,
+      };
+
+      // 更新当前参数并显示弹窗
+      setCurrentParams(requestParams);
+      setPopupVisible(true);
+
+      console.log('点击了柱状图，发送参数:', requestParams);
+    };
 
     // 设置图表配置
     const option = {
@@ -144,6 +172,9 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     // 设置配置并渲染图表
     chartInstance.current.setOption(option);
 
+    // 注册点击事件
+    chartInstance.current.on('click', 'series', handleBarClick);
+
     // 处理窗口大小变化时的自适应
     const handleResize = () => {
       if (chartInstance.current) {
@@ -157,11 +188,17 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
       if (chartInstance.current) {
+        chartInstance.current.off('click');
         chartInstance.current.dispose();
         chartInstance.current = null;
       }
     };
   }, [allServiceData, selectedCity]); // 依赖项包括数据和选中城市
+
+  // 处理弹窗关闭
+  const handlePopupCancel = () => {
+    setPopupVisible(false);
+  };
 
   if (loading) {
     // 如果实例已存在，先销毁
@@ -183,7 +220,14 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     );
   }
 
-  return <div ref={chartRef} style={{ width: '100%', height: '340px' }} />;
+  return (
+    <>
+      <div ref={chartRef} style={{ width: '100%', height: '340px' }} />
+
+      {/* 工单详情弹窗 */}
+      <PopUpTable visible={popupVisible} onCancel={handlePopupCancel} params={currentParams} />
+    </>
+  );
 };
 
 export default StackedBarChart;

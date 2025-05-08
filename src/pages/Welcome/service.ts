@@ -1,4 +1,5 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // 定义基础API路径
 const BASE_API = '/api/welcome';
@@ -9,18 +10,29 @@ interface FetchAPIOptions extends AxiosRequestConfig {
   responseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream';
 }
 
+// 定义详情请求参数接口
+export interface DetailOrderParams {
+  order: string;
+  network: string;
+  mold: string;
+}
+
 async function fetchAPI(endpoint: string, options: FetchAPIOptions = {}): Promise<AxiosResponse> {
   const url = `${BASE_API}${endpoint}`;
+
   try {
-    // 使用axios进行请求
-    return await axios(url, {
+    // 修复: 直接调用axios函数而不是作为对象使用
+    const response = await axios({
+      url,
       ...options,
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
       },
-      responseType: options.responseType || 'json', // 默认为JSON响应，下载文件时使用 'blob'
+      responseType: options.responseType || 'json',
     });
+
+    return response;
   } catch (error) {
     console.error(`请求${url}失败:`, error);
     throw error;
@@ -34,9 +46,10 @@ export async function getWelcomeData(): Promise<any> {
   return response.data;
 }
 
-export async function getDetailsOrder(): Promise<any> {
+export async function getDetailsOrder(params: DetailOrderParams): Promise<any> {
   const response = await fetchAPI('/detailsOrder', {
     method: 'POST',
+    data: params,
   });
   return response.data;
 }
