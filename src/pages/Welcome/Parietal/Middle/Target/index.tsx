@@ -1,10 +1,10 @@
 import React, { useMemo, useEffect } from 'react';
-import { Row, Col, Statistic, Card, Spin, Skeleton, Tooltip } from 'antd';
+import { Row, Col, Statistic, Card, Spin, Skeleton, Progress } from 'antd';
 import type { StatisticProps } from 'antd';
 import CountUp from 'react-countup';
-import { InfoCircleOutlined } from '@ant-design/icons';
 import ChartCard from './ChartCard';
 import Field from './Field';
+import Trend from './Trend';
 
 // 使用 CountUp 组件作为格式化器，保持原代码风格
 const formatter: StatisticProps['formatter'] = (value) => (
@@ -22,7 +22,7 @@ interface TargetProps {
 const topColResponsiveProps = {
   xs: 24,
   sm: 12,
-  md: 8,
+  md: 6,
 };
 
 const Target: React.FC<TargetProps> = ({
@@ -104,11 +104,11 @@ const Target: React.FC<TargetProps> = ({
           <ChartCard
             bordered={false}
             title="总呼入量"
-            action={
-              <Tooltip title="">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
+            // action={
+            //   <Tooltip title="">
+            //     <InfoCircleOutlined />
+            //   </Tooltip>
+            // }
             total={
               loading ? (
                 <Skeleton.Input style={{ width: 100 }} active />
@@ -119,8 +119,8 @@ const Target: React.FC<TargetProps> = ({
             footer={
               <Field
                 // @ts-ignore
-                label="接通率"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+                label="接通量"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
               />
             }
             contentHeight={46}
@@ -130,11 +130,11 @@ const Target: React.FC<TargetProps> = ({
           <ChartCard
             bordered={false}
             title="10009来话"
-            action={
-              <Tooltip title="">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
+            // action={
+            //   <Tooltip title="">
+            //     <InfoCircleOutlined />
+            //   </Tooltip>
+            // }
             total={
               loading ? (
                 <Skeleton.Input style={{ width: 100 }} active />
@@ -145,8 +145,8 @@ const Target: React.FC<TargetProps> = ({
             footer={
               <Field
                 // @ts-ignore
-                label="接通率"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+                label="接通量"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
               />
             }
             contentHeight={46}
@@ -156,11 +156,11 @@ const Target: React.FC<TargetProps> = ({
           <ChartCard
             bordered={false}
             title="10000政企来话"
-            action={
-              <Tooltip title="">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
+            // action={
+            //   <Tooltip title="">
+            //     <InfoCircleOutlined />
+            //   </Tooltip>
+            // }
             total={
               loading ? (
                 <Skeleton.Input style={{ width: 100 }} active />
@@ -171,11 +171,44 @@ const Target: React.FC<TargetProps> = ({
             footer={
               <Field
                 // @ts-ignore
-                label="接通率"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+                label="接通量"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
               />
             }
             contentHeight={46}
+          />
+        </Col>
+        <Col {...topColResponsiveProps}>
+          <ChartCard
+            bordered={false}
+            title="当前接通率"
+            // action={
+            //   <Tooltip title="">
+            //     <InfoCircleOutlined />
+            //   </Tooltip>
+            // }
+            total={
+              loading ? (
+                <Skeleton.Input style={{ width: 100 }} active />
+              ) : (
+                <Statistic value={`${78}%`} />
+              )
+            }
+            footer={<Field label={undefined} value={undefined} />}
+            // footer={
+            //   <div
+            //     style={{
+            //       whiteSpace: 'nowrap',
+            //       overflow: 'hidden',
+            //     }}
+            //   >
+            //     <Trend flag="down">
+            //       同比
+            //       <span>11%</span>
+            //     </Trend>
+            //   </div>
+            // }
+            // contentHeight={46}
           />
         </Col>
       </Row>
