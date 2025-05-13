@@ -1,7 +1,10 @@
 import React, { useMemo, useEffect } from 'react';
-import { Row, Col, Statistic, Card, Spin } from 'antd';
+import { Row, Col, Statistic, Card, Spin, Skeleton, Tooltip } from 'antd';
 import type { StatisticProps } from 'antd';
 import CountUp from 'react-countup';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import ChartCard from './ChartCard';
+import Field from './Field';
 
 // 使用 CountUp 组件作为格式化器，保持原代码风格
 const formatter: StatisticProps['formatter'] = (value) => (
@@ -15,6 +18,12 @@ interface TargetProps {
   selectedCity?: any | null;
   loading?: boolean;
 }
+
+const topColResponsiveProps = {
+  xs: 24,
+  sm: 12,
+  md: 8,
+};
 
 const Target: React.FC<TargetProps> = ({
   allServiceData = [],
@@ -82,7 +91,7 @@ const Target: React.FC<TargetProps> = ({
       totalTickets,
       // 以下是默认数据
       inboundCalls: 7600,
-      queue10009: 7700,
+      queue10009: 7200,
       allBusinessQueue: 39,
     };
   }, [allServiceData, enterpriseData, selectedCity]);
@@ -91,20 +100,83 @@ const Target: React.FC<TargetProps> = ({
     <Spin spinning={loading}>
       {/* 第一行 */}
       <Row gutter={[16, 16]}>
-        <Col md={8} sm={12} xs={24}>
-          <Card variant="borderless">
-            <Statistic title="呼入总量" value={stats.inboundCalls} formatter={formatter} />
-          </Card>
+        <Col {...topColResponsiveProps}>
+          <ChartCard
+            bordered={false}
+            title="总呼入量"
+            action={
+              <Tooltip title="">
+                <InfoCircleOutlined />
+              </Tooltip>
+            }
+            total={
+              loading ? (
+                <Skeleton.Input style={{ width: 100 }} active />
+              ) : (
+                <Statistic value={stats.inboundCalls} formatter={formatter} />
+              )
+            }
+            footer={
+              <Field
+                // @ts-ignore
+                label="接通率"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+              />
+            }
+            contentHeight={46}
+          />
         </Col>
-        <Col md={8} sm={12} xs={24}>
-          <Card variant="borderless">
-            <Statistic title="10009来话" value={stats.queue10009} formatter={formatter} />
-          </Card>
+        <Col {...topColResponsiveProps}>
+          <ChartCard
+            bordered={false}
+            title="10009来话"
+            action={
+              <Tooltip title="">
+                <InfoCircleOutlined />
+              </Tooltip>
+            }
+            total={
+              loading ? (
+                <Skeleton.Input style={{ width: 100 }} active />
+              ) : (
+                <Statistic value={stats.queue10009} formatter={formatter} />
+              )
+            }
+            footer={
+              <Field
+                // @ts-ignore
+                label="接通率"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+              />
+            }
+            contentHeight={46}
+          />
         </Col>
-        <Col md={8} sm={12} xs={24}>
-          <Card variant="borderless">
-            <Statistic title="10000政企来话" value={stats.allBusinessQueue} formatter={formatter} />
-          </Card>
+        <Col {...topColResponsiveProps}>
+          <ChartCard
+            bordered={false}
+            title="10000政企来话"
+            action={
+              <Tooltip title="">
+                <InfoCircleOutlined />
+              </Tooltip>
+            }
+            total={
+              loading ? (
+                <Skeleton.Input style={{ width: 100 }} active />
+              ) : (
+                <Statistic value={stats.allBusinessQueue} formatter={formatter} />
+              )
+            }
+            footer={
+              <Field
+                // @ts-ignore
+                label="接通率"
+                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `${1}%`}
+              />
+            }
+            contentHeight={46}
+          />
         </Col>
       </Row>
 
@@ -134,4 +206,5 @@ const Target: React.FC<TargetProps> = ({
   );
 };
 
+// @ts-ignore
 export default Target;
