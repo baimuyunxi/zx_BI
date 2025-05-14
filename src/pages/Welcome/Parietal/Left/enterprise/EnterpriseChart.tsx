@@ -3,26 +3,27 @@ import * as echarts from 'echarts';
 import type { EChartsOption } from 'echarts';
 import { Spin } from 'antd';
 
-// 定义组件属性接口
-interface WeatherChartProps {
-  hwFullService?: any[];
+// 定义企业来话图表的属性接口
+interface EnterpriseChartProps {
+  hwEnterprise?: any[]; // 注意：这里是hwFullService，保持与组件调用中的一致
   selectedCity?: any | null;
   loading?: boolean;
 }
 
-const WeatherChart: React.FC<WeatherChartProps> = ({
-  hwFullService = [],
+// 企业来话图表组件 - 复用WeatherChart组件的样式，但处理企业数据
+const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
+  hwEnterprise = [], // 这里接收的实际是enterprise数据，但参数名保持一致
   selectedCity = null,
   loading = false,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // 提取数据并处理，返回图表所需的数据结构
+  // 处理企业来话数据
   const chartData = useMemo(() => {
-    console.log('WeatherChart processing data, selectedCity:', selectedCity);
-    console.log('hwFullService data:', hwFullService);
+    console.log('EnterpriseChart processing data, selectedCity:', selectedCity);
+    console.log('hwEnterprise data:', hwEnterprise); // 实际是enterprise数据
 
-    // 默认为空数据结构
+    // 默认数据结构
     const defaultData = {
       timeSlots: [
         '00:00',
@@ -46,21 +47,21 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
 
     try {
       // 如果没有数据，返回默认值
-      if (!hwFullService || hwFullService.length === 0) {
+      if (!hwEnterprise || hwEnterprise.length === 0) {
         return defaultData;
       }
 
       // 筛选需要处理的城市数据
-      let cityDataList = hwFullService;
+      let cityDataList = hwEnterprise;
 
       // 如果选中了特定城市，只处理该城市的数据
       if (selectedCity && selectedCity.localNet) {
         const localNetCode = selectedCity.localNet;
-        cityDataList = hwFullService.filter((city: any) => city.local === localNetCode);
+        cityDataList = hwEnterprise.filter((city: any) => city.local === localNetCode);
 
         // 如果没有找到该城市的数据，返回默认数据
         if (cityDataList.length === 0) {
-          console.log('未找到选中城市的数据:', localNetCode);
+          console.log('未找到选中城市的企业数据:', localNetCode);
           return defaultData;
         }
       }
@@ -83,26 +84,11 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
       cityDataList.forEach((city: any) => {
         if (city.marked && city.marked.length > 0) {
           city.marked.forEach((timePoint: any, index: number) => {
-            // 对于每个时间点，累加所有标签的数据
-            if (timePoint.labelSet && timePoint.labelSet.length > 0) {
-              // 累加该时间点的所有标签数据
-              let totalCnt = 0;
-              let totalLastCnt = 0;
-
-              timePoint.labelSet.forEach((label: any) => {
-                // 累计来话量数据 (grandto和lastgrandto)
-                currentAccumulated[index] += label.grandto || 0;
-                previousAccumulated[index] += label.lastgrandto || 0;
-
-                // 当前时间点来话量 (cnt和lastCnt)
-                totalCnt += label.cnt || 0;
-                totalLastCnt += label.lastCnt || 0;
-              });
-
-              // 保存当前时间点的来话量总数
-              currentCounts[index] += totalCnt;
-              previousCounts[index] += totalLastCnt;
-            }
+            // 直接读取企业数据 - 企业数据中，每个时间点直接包含了cnt、lastCnt、grandto、lastgrandto等属性
+            currentAccumulated[index] += timePoint.grandto || 0;
+            previousAccumulated[index] += timePoint.lastgrandto || 0;
+            currentCounts[index] += timePoint.cnt || 0;
+            previousCounts[index] += timePoint.lastCnt || 0;
           });
         }
       });
@@ -115,10 +101,10 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
         previousCounts,
       };
     } catch (error) {
-      console.error('处理图表数据时出错:', error);
+      console.error('处理企业图表数据时出错:', error);
       return defaultData;
     }
-  }, [hwFullService, selectedCity]);
+  }, [hwEnterprise, selectedCity]);
 
   useEffect(() => {
     let chartInstance: echarts.ECharts | undefined;
@@ -135,12 +121,12 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
       const maxCount = Math.max(...chartData.currentCounts, ...chartData.previousCounts);
 
       // 计算合适的y轴刻度
-      const yAxisMax = Math.ceil(maxAccumulated / 100) * 100;
-      const y2AxisMax = Math.ceil(maxCount / 10) * 10;
+      const yAxisMax = Math.ceil(maxAccumulated / 100) * 100 || 100;
+      const y2AxisMax = Math.ceil(maxCount / 10) * 10 || 10;
 
       const option: EChartsOption = {
         title: {
-          text: '整体来话量',
+          text: '企业来话量',
         },
         tooltip: {
           trigger: 'axis',
@@ -285,4 +271,4 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
   );
 };
 
-export default WeatherChart;
+export default EnterpriseChart;

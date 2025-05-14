@@ -46,6 +46,13 @@ export async function getWelcomeData(): Promise<any> {
   return response.data;
 }
 
+export async function getTrafficData(): Promise<any> {
+  const response = await fetchAPI('/queryTraffic', {
+    method: 'GET',
+  });
+  return response.data;
+}
+
 export async function getDetailsOrder(params: DetailOrderParams): Promise<any> {
   const response = await fetchAPI('/detailsOrder', {
     method: 'POST',

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Row, Col, Card, FloatButton } from 'antd';
-import { getWelcomeData } from './service'; // 导入刚刚创建的函数
+import { getWelcomeData, getTrafficData } from './service'; // 导入刚刚创建的函数
 import MiddleRightMap from '@/pages/Welcome/Parietal/Middle/Map';
 import LeftStats from '@/pages/Welcome/Parietal/Left/fullService';
 import MyWordCloud from '@/pages/Welcome/Parietal/Right/WordCloud';
@@ -14,6 +14,7 @@ import { SyncOutlined } from '@ant-design/icons';
 const Dashboard = () => {
   // 添加状态来存储数据
   const [dashboardData, setDashboardData] = useState(null);
+  const [trafficData, setTrafficData] = useState(null);
   const [loading, setLoading] = useState(true);
   // 添加状态来存储选中的地市
   const [selectedCity, setSelectedCity] = useState(null);
@@ -32,7 +33,9 @@ const Dashboard = () => {
     try {
       console.log('开始获取Dashboard数据...');
       const data = await getWelcomeData();
+      const traffic = await getTrafficData();
       setDashboardData(data);
+      setTrafficData(traffic);
       // 重置选中的地市
       setSelectedCity(null);
       prevSelectedCityRef.current = null;
@@ -221,13 +224,23 @@ const Dashboard = () => {
           <div style={scrollableColumnStyle} className="hide-scrollbar">
             <Row gutter={[0, 16]}>
               <Col span={24}>
-                <Card title="10000政企来话" bodyStyle={{ padding: '12px' }}>
-                  <LeftStats />
+                <Card title="10000政企来话">
+                  <LeftStats
+                    // @ts-ignore
+                    hwFullService  = {trafficData?.fullService || []}
+                    selectedCity={selectedCity}
+                    loading={loading}
+                  />
                 </Card>
               </Col>
               <Col span={24}>
                 <Card title="10009来话">
-                  <EnStats />
+                  <EnStats
+                    // @ts-ignore
+                    hwEnterprise = {trafficData?.enterprise || []}
+                    selectedCity={selectedCity}
+                    loading={loading}
+                  />
                 </Card>
               </Col>
             </Row>
@@ -245,6 +258,12 @@ const Dashboard = () => {
                 allServiceData={dashboardData?.allService || []}
                 // @ts-ignore
                 enterpriseData={dashboardData?.enterprise || []}
+                // @ts-ignore
+                hwEnterprise = {trafficData?.enterprise || []}
+                // @ts-ignore
+                hwFullService  = {trafficData?.fullService || []}
+                // @ts-ignore
+                hwConRate = {trafficData?.conRate || []}
                 selectedCity={selectedCity}
                 loading={loading}
                 key={targetKey} // 使用复合key确保重新渲染
@@ -261,6 +280,12 @@ const Dashboard = () => {
                   allServiceData={dashboardData?.allService || []}
                   // @ts-ignore
                   enterpriseData={dashboardData?.enterprise || []}
+                  // @ts-ignore
+                  hwEnterprise = {trafficData?.enterprise || []}
+                  // @ts-ignore
+                  hwFullService  = {trafficData?.fullService || []}
+                  // @ts-ignore
+                  hwConRate = {trafficData?.conRate || []}
                   onCityClick={handleCityClick}
                   loading={loading}
                   selectedCity={selectedCity} // 添加selectedCity属性，确保地图组件知道当前选中的城市
