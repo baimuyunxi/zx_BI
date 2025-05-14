@@ -106,7 +106,7 @@ function generateLabelData(time: string, prevGrandtotals: Map<string, number> = 
   return { labelSet, newGrandtotals };
 }
 
-// 生成企业时间段数据
+// 生成时间段数据
 function generateEnterpriseTimeData(time: string, prevGrandto: number = 0, prevLastGrandto: number = 0): {
   timeData: EnterpriseMarkedTimeItem,
   newGrandto: number,
@@ -151,7 +151,7 @@ function generateCityData(cityCode: string, timeSlots: string[] = TIME_SLOTS.sli
   };
 }
 
-// 为每个城市生成企业数据
+// 为每个城市生成数据
 function generateEnterpriseCityData(cityCode: string, timeSlots: string[] = TIME_SLOTS.slice(0, 3)): EnterpriseLocalData {
   let grandto = 0;
   let lastGrandto = 0;
@@ -170,15 +170,12 @@ function generateEnterpriseCityData(cityCode: string, timeSlots: string[] = TIME
   };
 }
 
-// 生成完整数据
 function generateFullData(): ApiResponse {
-  // 全服务数据
   const fullService: LocalData[] = HUNAN_CITIES.map(city => {
     // 为所有地市使用完整的时间段（整天24小时）
     return generateCityData(city.code, TIME_SLOTS);
   });
 
-  // 企业数据
   const enterprise: EnterpriseLocalData[] = HUNAN_CITIES.map(city => {
     // 为所有地市使用完整的时间段（整天24小时）
     return generateEnterpriseCityData(city.code, TIME_SLOTS);
@@ -186,10 +183,10 @@ function generateFullData(): ApiResponse {
 
   // 接通率数据
   const conRate: ConRate = {
-    wanTurned: getRandomInt(8000, 12000),
-    wanCallIn: getRandomInt(10000, 15000),
-    zqTurned: getRandomInt(5000, 8000),
-    zqCallIn: getRandomInt(6000, 10000)
+    wanTurned: getRandomInt(80, 120),
+    wanCallIn: getRandomInt(100, 150),
+    zqTurned: getRandomInt(50, 80),
+    zqCallIn: getRandomInt(60, 100)
   };
 
   return {

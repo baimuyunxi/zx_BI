@@ -116,13 +116,6 @@ const Target: React.FC<TargetProps> = ({
                 <Statistic value={stats.inboundCalls} formatter={formatter} />
               )
             }
-            footer={
-              <Field
-                // @ts-ignore
-                label="接通量"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
-              />
-            }
             contentHeight={46}
           />
         </Col>
@@ -141,13 +134,6 @@ const Target: React.FC<TargetProps> = ({
               ) : (
                 <Statistic value={stats.queue10009} formatter={formatter} />
               )
-            }
-            footer={
-              <Field
-                // @ts-ignore
-                label="接通量"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
-              />
             }
             contentHeight={46}
           />
@@ -168,20 +154,13 @@ const Target: React.FC<TargetProps> = ({
                 <Statistic value={stats.allBusinessQueue} formatter={formatter} />
               )
             }
-            footer={
-              <Field
-                // @ts-ignore
-                label="接通量"
-                value={loading ? <Skeleton.Input style={{ width: 50 }} active /> : `1`}
-              />
-            }
             contentHeight={46}
           />
         </Col>
         <Col {...topColResponsiveProps}>
           <ChartCard
             bordered={false}
-            title="当前接通率"
+            title="全省接通率"
             // action={
             //   <Tooltip title="">
             //     <InfoCircleOutlined />
@@ -194,21 +173,7 @@ const Target: React.FC<TargetProps> = ({
                 <Statistic value={`${78}%`} />
               )
             }
-            footer={<Field label={undefined} value={undefined} />}
-            // footer={
-            //   <div
-            //     style={{
-            //       whiteSpace: 'nowrap',
-            //       overflow: 'hidden',
-            //     }}
-            //   >
-            //     <Trend flag="down">
-            //       同比
-            //       <span>11%</span>
-            //     </Trend>
-            //   </div>
-            // }
-            // contentHeight={46}
+            contentHeight={46}
           />
         </Col>
       </Row>
