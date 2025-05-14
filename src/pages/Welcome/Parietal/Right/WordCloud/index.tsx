@@ -12,7 +12,10 @@ interface OrderlyWordCloudProps {
   loading?: boolean;
 }
 
-const OrderlyWordCloud: React.FC<OrderlyWordCloudProps> = ({ wordCloudData = [], loading = false }) => {
+const OrderlyWordCloud: React.FC<OrderlyWordCloudProps> = ({
+  wordCloudData = [],
+  loading = false,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,9 +25,9 @@ const OrderlyWordCloud: React.FC<OrderlyWordCloudProps> = ({ wordCloudData = [],
     containerRef.current.innerHTML = '';
 
     // 转换数据格式以适配G2Plot的要求
-    const formattedData = wordCloudData.map(item => ({
+    const formattedData = wordCloudData.map((item) => ({
       text: item.word,
-      value: item.weight
+      value: item.weight,
     }));
 
     // 创建词云图实例
@@ -51,23 +54,17 @@ const OrderlyWordCloud: React.FC<OrderlyWordCloudProps> = ({ wordCloudData = [],
     };
   }, [wordCloudData, loading]);
 
-  if (loading) {
-    return (
-      <div style={{ width: '100%', height: '320px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Spin tip="加载中..." />
-      </div>
-    );
-  }
-
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        height: '320px',
-        backgroundColor: 'white', // 使用白色背景确保文字清晰可见
-      }}
-    />
+    <Spin spinning={loading}>
+      <div
+        ref={containerRef}
+        style={{
+          width: '100%',
+          height: '320px',
+          backgroundColor: 'white', // 使用白色背景确保文字清晰可见
+        }}
+      />
+    </Spin>
   );
 };
 
