@@ -11,10 +11,10 @@ interface SixTypesLabelProps {
 }
 
 const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
-                                                       hwFullService = [],
-                                                       selectedCity = null,
-                                                       loading = false
-                                                     }) => {
+  hwFullService = [],
+  selectedCity = null,
+  loading = false,
+}) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
   // 处理数据，提取六类标签的数据
@@ -22,14 +22,11 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
     console.log('SixTypesLabel processing data, selectedCity:', selectedCity);
     console.log('hwFullService data:', hwFullService);
 
-    // 定义六类标签（与TrafficDataGenerator.java中的TAG_TYPES保持一致）
-    const tagTypes = ["校园客户", "行业客户", "商业客户", "要客", "战略客户", "老干部"];
-
-    // 初始化结果对象
+    // 初始化结果对象，标签集合将从数据中动态获取
     const result = {
-      tagNames: tagTypes, // Y轴标签
-      currentData: new Array(tagTypes.length).fill(0), // 当日数据 - grandto
-      previousData: new Array(tagTypes.length).fill(0) // 昨日数据 - lastgrandto
+      tagNames: [], // 将从数据中获取
+      currentData: [], // 当日数据 - grandto
+      previousData: [], // 昨日数据 - lastgrandto
     };
 
     try {
@@ -53,6 +50,35 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
         }
       }
 
+      // 收集系统中所有可能的标签
+      const tagTypesSet = new Set<string>();
+
+      // 首先遍历所有数据，收集所有出现的标签类型
+      cityDataList.forEach((city: any) => {
+        if (city.marked && city.marked.length > 0) {
+          city.marked.forEach((timePoint: any) => {
+            if (timePoint.labelSet && timePoint.labelSet.length > 0) {
+              timePoint.labelSet.forEach((label: any) => {
+                if (label.tag) {
+                  tagTypesSet.add(label.tag);
+                }
+              });
+            }
+          });
+        }
+      });
+
+      // 将Set转换为Array
+      const tagTypes = Array.from(tagTypesSet);
+
+      // 更新结果对象
+      // @ts-ignore
+      result.tagNames = tagTypes;
+      // @ts-ignore
+      result.currentData = new Array(tagTypes.length).fill(0);
+      // @ts-ignore
+      result.previousData = new Array(tagTypes.length).fill(0);
+
       // 对每个城市的数据进行处理
       cityDataList.forEach((city: any) => {
         if (city.marked && city.marked.length > 0) {
@@ -66,8 +92,10 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
               const tagIndex = tagTypes.indexOf(label.tag);
               if (tagIndex !== -1) {
                 // 使用grandto和lastgrandto而不是cnt和lastCnt
-                result.currentData[tagIndex] += (label.grandto || 0);
-                result.previousData[tagIndex] += (label.lastgrandto || 0);
+                // @ts-ignore
+                result.currentData[tagIndex] += label.grandto || 0;
+                // @ts-ignore
+                result.previousData[tagIndex] += label.lastgrandto || 0;
               }
             });
           }
@@ -91,7 +119,7 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
     // 配置项
     const option: EChartsOption = {
       title: {
-        text: '六类标签来话量',
+        text: '标签来话量', // 更改为更通用的标题，因为标签数量可能不是六个
       },
       tooltip: {
         trigger: 'axis',
@@ -100,9 +128,7 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
         },
       },
       legend: {
-        // orient: 'vertical',
         right: 0,
-        // top: 'center'
       },
       grid: {
         left: '3%',

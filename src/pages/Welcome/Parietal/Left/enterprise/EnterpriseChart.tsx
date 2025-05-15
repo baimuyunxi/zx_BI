@@ -23,26 +23,13 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
     console.log('EnterpriseChart processing data, selectedCity:', selectedCity);
     console.log('hwEnterprise data:', hwEnterprise); // 实际是enterprise数据
 
-    // 默认数据结构
+    // 动态默认数据结构，不再硬编码时间点
     const defaultData = {
-      timeSlots: [
-        '00:00',
-        '02:00',
-        '04:00',
-        '06:00',
-        '08:00',
-        '10:00',
-        '12:00',
-        '14:00',
-        '16:00',
-        '18:00',
-        '20:00',
-        '22:00',
-      ],
-      currentAccumulated: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      previousAccumulated: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      currentCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      previousCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      timeSlots: [],
+      currentAccumulated: [],
+      previousAccumulated: [],
+      currentCounts: [],
+      previousCounts: [],
     };
 
     try {
@@ -72,9 +59,10 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
         return defaultData;
       }
 
+      // 动态获取时间点，不再硬编码
       const timeSlots = sampleCity.marked.map((item: any) => item.time);
 
-      // 初始化数据数组
+      // 初始化数据数组，使用动态长度
       const currentAccumulated: number[] = new Array(timeSlots.length).fill(0);
       const previousAccumulated: number[] = new Array(timeSlots.length).fill(0);
       const currentCounts: number[] = new Array(timeSlots.length).fill(0);
@@ -114,15 +102,13 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
       chartInstance = echarts.init(chartRef.current);
 
       // 计算y轴的最大值，确保有合适的刻度
-      const maxAccumulated = Math.max(
-        ...chartData.currentAccumulated,
-        ...chartData.previousAccumulated,
-      );
-      const maxCount = Math.max(...chartData.currentCounts, ...chartData.previousCounts);
+      const maxAccumulated =
+        Math.max(...chartData.currentAccumulated, ...chartData.previousAccumulated) || 100; // 防止空数组导致的NaN
+      const maxCount = Math.max(...chartData.currentCounts, ...chartData.previousCounts) || 10;
 
       // 计算合适的y轴刻度
-      const yAxisMax = Math.ceil(maxAccumulated / 100) * 100 || 100;
-      const y2AxisMax = Math.ceil(maxCount / 10) * 10 || 10;
+      const yAxisMax = Math.ceil(maxAccumulated / 100) * 100;
+      const y2AxisMax = Math.ceil(maxCount / 10) * 10;
 
       const option: EChartsOption = {
         title: {
