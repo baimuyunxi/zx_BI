@@ -34,14 +34,14 @@ interface MiddleRightMapProps {
 }
 
 const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
-                                                         allServiceData = [],
-                                                         enterpriseData = [],
-                                                         hwEnterprise = [],
-                                                         hwFullService = [],
-                                                         onCityClick,
-                                                         loading = false,
-                                                         selectedCity = null,
-                                                       }) => {
+  allServiceData = [],
+  enterpriseData = [],
+  hwEnterprise = [],
+  hwFullService = [],
+  onCityClick,
+  loading = false,
+  selectedCity = null,
+}) => {
   const chartRef = useRef(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
   const cityDataRef = useRef<any[]>([]);
@@ -76,8 +76,8 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
       }
 
       result.set(localCode, {
-        ...result.get(localCode) || {},
-        enterprise10009
+        ...(result.get(localCode) || {}),
+        enterprise10009,
       });
     }
 
@@ -99,8 +99,8 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
       }
 
       result.set(localCode, {
-        ...result.get(localCode) || {},
-        fullService10000
+        ...(result.get(localCode) || {}),
+        fullService10000,
       });
     }
 
@@ -160,7 +160,7 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         localNet: localNetCode,
         // 添加话务量数据
         enterprise10009,
-        fullService10000
+        fullService10000,
       });
     }
 
