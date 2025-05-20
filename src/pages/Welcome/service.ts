@@ -60,3 +60,11 @@ export async function getDetailsOrder(params: DetailOrderParams): Promise<any> {
   });
   return response.data;
 }
+
+export async function getWordDetails(params: any): Promise<any> {
+  const response = await fetchAPI('/queryWordDetailed', {
+    method: 'POST',
+    data: params,
+  });
+  return response.data;
+}
