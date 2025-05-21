@@ -270,28 +270,11 @@ const EnterpriseBarChart: React.FC<EnterpriseBarChartProps> = ({
     setPopupVisible(false);
   };
 
-  if (loading) {
-    if (chartInstance.current) {
-      chartInstance.current.dispose();
-    }
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '420px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Spin tip="加载中..." />
-      </div>
-    );
-  }
-
   return (
     <>
-      <div ref={chartRef} style={{ width: '100%', height: '420px' }} />
+      <Spin spinning={loading}>
+        <div ref={chartRef} style={{ width: '100%', height: '420px' }} />
+      </Spin>
 
       {/* 工单详情弹窗 */}
       <PopUpTable visible={popupVisible} onCancel={handlePopupCancel} params={currentParams} />

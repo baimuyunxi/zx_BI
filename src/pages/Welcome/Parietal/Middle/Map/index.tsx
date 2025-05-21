@@ -25,6 +25,9 @@ const CITY_CODE_MAP = {
 interface MiddleRightMapProps {
   allServiceData?: any[];
   enterpriseData?: any[];
+  hwEnterprise?: any[];
+  hwFullService?: any[];
+  hwConRate?: any[];
   onCityClick?: (cityData: any) => void;
   loading?: boolean;
   selectedCity?: any | null;
@@ -33,6 +36,8 @@ interface MiddleRightMapProps {
 const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
   allServiceData = [],
   enterpriseData = [],
+  hwEnterprise = [],
+  hwFullService = [],
   onCityClick,
   loading = false,
   selectedCity = null,
@@ -51,6 +56,57 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
       updateChartSelection();
     }
   }, [selectedCity]);
+
+  // 计算每个城市的话务量数据
+  const hwData = useMemo(() => {
+    console.log('计算城市话务量数据');
+    const result = new Map();
+
+    // 计算各地市的10009来话量 (hwEnterprise)
+    for (const city of hwEnterprise || []) {
+      const localCode = city.local;
+      if (!localCode) continue;
+
+      let enterprise10009 = 0;
+
+      // 获取最新时间点的grandto值
+      if (city.marked && city.marked.length > 0) {
+        const latestTimePoint = city.marked[city.marked.length - 1];
+        enterprise10009 = latestTimePoint.grandto || 0;
+      }
+
+      result.set(localCode, {
+        ...(result.get(localCode) || {}),
+        enterprise10009,
+      });
+    }
+
+    // 计算各地市的10000政企来话量 (hwFullService)
+    for (const city of hwFullService || []) {
+      const localCode = city.local;
+      if (!localCode) continue;
+
+      let fullService10000 = 0;
+
+      // 获取最新时间点所有标签的grandto总和
+      if (city.marked && city.marked.length > 0) {
+        const latestTimePoint = city.marked[city.marked.length - 1];
+        if (latestTimePoint.labelSet && latestTimePoint.labelSet.length > 0) {
+          fullService10000 = latestTimePoint.labelSet.reduce((sum: number, label: any) => {
+            return sum + (label.grandto || 0);
+          }, 0);
+        }
+      }
+
+      result.set(localCode, {
+        ...(result.get(localCode) || {}),
+        fullService10000,
+      });
+    }
+
+    console.log('城市话务量数据计算结果:', Object.fromEntries(result));
+    return result;
+  }, [hwEnterprise, hwFullService]);
 
   // 计算每个城市的工单数据
   const cityData = useMemo(() => {
@@ -90,6 +146,11 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         cityName.replace('市', '')
       ).trim();
 
+      // 获取话务量数据
+      const hwCityData = hwData.get(localNetCode) || {};
+      const enterprise10009 = hwCityData.enterprise10009 || 0;
+      const fullService10000 = hwCityData.fullService10000 || 0;
+
       result.push({
         name: cityName,
         value: totalTickets,
@@ -97,13 +158,16 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
         enterpriseTotal,
         region: regionName,
         localNet: localNetCode,
+        // 添加话务量数据
+        enterprise10009,
+        fullService10000,
       });
     }
 
     // 更新ref中的数据
     cityDataRef.current = result;
     return result;
-  }, [allServiceData, enterpriseData]);
+  }, [allServiceData, enterpriseData, hwData]);
 
   // 处理地图点击事件的函数
   const handleMapClick = (params: echarts.ECElementEvent, chart: echarts.ECharts | null) => {
@@ -224,9 +288,12 @@ const MiddleRightMap: React.FC<MiddleRightMapProps> = ({
             const cityInfo = cityDataRef.current.find((city) => city.name === params.name);
             if (!cityInfo) return `${params.name}<br/>工单总量: ${params.value || 0}`;
 
+            // 增加10000政企来话和10009来话数据显示
             return `
-              全业务工单: ${cityInfo.allServiceTotal || 0}<br/>
-              政企故障工单: ${cityInfo.enterpriseTotal || 0}
+              <div>10000政企来话: ${cityInfo.fullService10000 || 0}</div>
+              <div>10009来话: ${cityInfo.enterprise10009 || 0}</div>
+              <div>全业务工单: ${cityInfo.allServiceTotal || 0}</div>
+              <div>政企故障工单: ${cityInfo.enterpriseTotal || 0}</div>
             `;
           },
         },

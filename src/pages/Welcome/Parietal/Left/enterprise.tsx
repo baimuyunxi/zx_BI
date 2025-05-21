@@ -1,14 +1,30 @@
 import React from 'react';
 import { Row, Col } from 'antd';
-import WeatherChart from '@/pages/Welcome/Parietal/Left/Sublayer/IncomeTimePeriod';
+import EnterpriseChart from '@/pages/Welcome/Parietal/Left/enterprise/EnterpriseChart';
 
-const EnStats = () => {
+// 定义组件props接口
+interface EnStatsProps {
+  hwEnterprise?: any[];
+  selectedCity?: any | null;
+  loading?: boolean;
+}
+
+const EnStats: React.FC<EnStatsProps> = ({
+  hwEnterprise = [],
+  selectedCity = null,
+  loading = false,
+}) => {
   return (
     <>
       <Row gutter={[0, 16]}>
         <Col span={24}>
           {/*话务情况*/}
-          <WeatherChart />
+          <EnterpriseChart
+            // @ts-ignore
+            hwEnterprise={hwEnterprise}
+            selectedCity={selectedCity}
+            loading={loading}
+          />
         </Col>
       </Row>
     </>

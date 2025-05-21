@@ -200,29 +200,11 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     setPopupVisible(false);
   };
 
-  if (loading) {
-    // 如果实例已存在，先销毁
-    if (chartInstance.current) {
-      chartInstance.current.dispose();
-    }
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '340px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Spin tip="加载中..." />
-      </div>
-    );
-  }
-
   return (
     <>
-      <div ref={chartRef} style={{ width: '100%', height: '340px' }} />
+      <Spin spinning={loading}>
+        <div ref={chartRef} style={{ width: '100%', height: '340px' }} />
+      </Spin>
 
       {/* 工单详情弹窗 */}
       <PopUpTable visible={popupVisible} onCancel={handlePopupCancel} params={currentParams} />
