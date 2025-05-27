@@ -11,10 +11,10 @@ interface SixTypesLabelProps {
 }
 
 const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
-  hwFullService = [],
-  selectedCity = null,
-  loading = false,
-}) => {
+                                                       hwFullService = [],
+                                                       selectedCity = null,
+                                                       loading = false,
+                                                     }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
   // 处理数据，提取六类标签的数据
@@ -71,13 +71,13 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
       // 将Set转换为Array
       const tagTypes = Array.from(tagTypesSet);
 
-      // 更新结果对象
-      // @ts-ignore
-      result.tagNames = tagTypes;
-      // @ts-ignore
-      result.currentData = new Array(tagTypes.length).fill(0);
-      // @ts-ignore
-      result.previousData = new Array(tagTypes.length).fill(0);
+      // 创建临时对象来存储每个标签的数据
+      const tagDataMap = new Map<string, { current: number; previous: number }>();
+
+      // 初始化每个标签的数据
+      tagTypes.forEach(tag => {
+        tagDataMap.set(tag, { current: 0, previous: 0 });
+      });
 
       // 对每个城市的数据进行处理
       cityDataList.forEach((city: any) => {
@@ -88,19 +88,38 @@ const SixTypesLabel: React.FC<SixTypesLabelProps> = ({
           if (latestTimePoint.labelSet && latestTimePoint.labelSet.length > 0) {
             // 遍历该时间点下的所有标签
             latestTimePoint.labelSet.forEach((label: any) => {
-              // 查找标签在tagTypes中的索引
-              const tagIndex = tagTypes.indexOf(label.tag);
-              if (tagIndex !== -1) {
+              const tagData = tagDataMap.get(label.tag);
+              if (tagData) {
                 // 使用grandto和lastgrandto而不是cnt和lastCnt
-                // @ts-ignore
-                result.currentData[tagIndex] += label.grandto || 0;
-                // @ts-ignore
-                result.previousData[tagIndex] += label.lastgrandto || 0;
+                tagData.current += label.grandto || 0;
+                tagData.previous += label.lastgrandto || 0;
               }
             });
           }
         }
       });
+
+      // 将Map转换为数组并按当日量倒序排列
+      const sortedTagData = Array.from(tagDataMap.entries())
+        .map(([tag, data]) => ({
+          tag,
+          current: data.current,
+          previous: data.previous
+        }))
+        .sort((a, b) => a.current - b.current); // 按当日量倒序排列
+
+      // 提取排序后的数据
+      const sortedTagNames = sortedTagData.map(item => item.tag);
+      const sortedCurrentData = sortedTagData.map(item => item.current);
+      const sortedPreviousData = sortedTagData.map(item => item.previous);
+
+      // 更新结果对象
+      // @ts-ignore
+      result.tagNames = sortedTagNames;
+      // @ts-ignore
+      result.currentData = sortedCurrentData;
+      // @ts-ignore
+      result.previousData = sortedPreviousData;
 
       return result;
     } catch (error) {

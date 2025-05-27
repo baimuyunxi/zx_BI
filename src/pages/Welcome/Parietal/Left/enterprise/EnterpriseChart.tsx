@@ -133,7 +133,7 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
         },
         legend: {
           bottom: 0,
-          data: ['当日累计', '昨日累计', '当日来话量', '昨日来话量'],
+          data: ['当日来话量', '昨日来话量', '当日累计', '昨日累计'],
         },
         grid: {
           left: '3%',
@@ -178,26 +178,6 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
         ],
         series: [
           {
-            name: '当日累计',
-            type: 'bar',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value as string;
-              },
-            },
-            data: chartData.currentAccumulated,
-          },
-          {
-            name: '昨日累计',
-            type: 'bar',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value as string;
-              },
-            },
-            data: chartData.previousAccumulated,
-          },
-          {
             name: '当日来话量',
             type: 'line',
             yAxisIndex: 1,
@@ -218,6 +198,32 @@ const EnterpriseChart: React.FC<EnterpriseChartProps> = ({
               },
             },
             data: chartData.previousCounts,
+          },
+          {
+            name: '当日累计',
+            type: 'bar',
+            tooltip: {
+              valueFormatter: function (value) {
+                return value as string;
+              },
+            },
+            data: chartData.currentAccumulated,
+            itemStyle: {
+              color: 'rgba(53,152,238,0.76)',
+            },
+          },
+          {
+            name: '昨日累计',
+            type: 'bar',
+            tooltip: {
+              valueFormatter: function (value) {
+                return value as string;
+              },
+            },
+            data: chartData.previousAccumulated,
+            itemStyle: {
+              color: 'rgba(158,112,237,0.75)',
+            },
           },
         ],
       };
