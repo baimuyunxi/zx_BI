@@ -153,4 +153,5 @@ export default defineConfig({
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  history: {type: 'hash'},  // 部署刷新路由指向错误
 });
