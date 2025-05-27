@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Row, Col, Card, FloatButton } from 'antd';
-import { getWelcomeData, getTrafficData } from './service'; // 导入刚刚创建的函数
+import { Row, Col, Card, FloatButton, Alert } from 'antd';
+import { getWelcomeData, getTrafficData } from './service';
 import MiddleRightMap from '@/pages/Welcome/Parietal/Middle/Map';
 import LeftStats from '@/pages/Welcome/Parietal/Left/fullService';
 import MyWordCloud from '@/pages/Welcome/Parietal/Right/WordCloud';
@@ -9,7 +9,8 @@ import EnterpriseBarChart from '@/pages/Welcome/Parietal/Right/Enterprise';
 import Target from '@/pages/Welcome/Parietal/Middle/Target';
 import EnStats from '@/pages/Welcome/Parietal/Left/enterprise';
 import TopList from '@/pages/Welcome/TopTable';
-import { SyncOutlined } from '@ant-design/icons';
+import { NotificationOutlined, SyncOutlined } from '@ant-design/icons';
+import Marquee from 'react-fast-marquee';
 
 const Dashboard = () => {
   // 添加状态来存储数据
@@ -212,12 +213,48 @@ const Dashboard = () => {
   const targetKey = `target-${selectedCity ? selectedCity.localNet : 'all'}-${renderCount}`;
   console.log('生成的Target Key:', targetKey);
 
+  const getCurrentHourTime = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    return `${currentHour.toString().padStart(2, '0')}:00`;
+  };
+
   return (
     <>
       {/* 添加内联样式标签 */}
       <style>{hideScrollbarCSS}</style>
 
       <Row gutter={[16, 16]}>
+        <Col span={24}>
+          <Alert
+            banner={true}
+            icon={<NotificationOutlined />}
+            closable
+            style={{ borderRadius: '23px', backgroundColor: '#bff18f' }}
+            message={
+              <Marquee pauseOnHover gradient={false}>
+                当前人工话务统计数据截止时间为&nbsp;
+                <span
+                  style={{
+                    color: 'red',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {getCurrentHourTime()}
+                </span>
+                &nbsp;。
+                <span
+                  style={{
+                    fontWeight: 'bold',
+                  }}
+                >
+                  工单数据为准实时数据。
+                </span>{' '}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </Marquee>
+            }
+          />
+        </Col>
         {/* Left Column - 可滚动，隐藏滚动条 */}
         <Col span={7}>
           {/* @ts-ignore*/}
@@ -227,7 +264,7 @@ const Dashboard = () => {
                 <Card title="10000政企来话">
                   <LeftStats
                     // @ts-ignore
-                    hwFullService  = {trafficData?.fullService || []}
+                    hwFullService={trafficData?.fullService || []}
                     selectedCity={selectedCity}
                     loading={loading}
                   />
@@ -237,7 +274,7 @@ const Dashboard = () => {
                 <Card title="10009来话">
                   <EnStats
                     // @ts-ignore
-                    hwEnterprise = {trafficData?.enterprise || []}
+                    hwEnterprise={trafficData?.enterprise || []}
                     selectedCity={selectedCity}
                     loading={loading}
                   />
@@ -259,11 +296,11 @@ const Dashboard = () => {
                 // @ts-ignore
                 enterpriseData={dashboardData?.enterprise || []}
                 // @ts-ignore
-                hwEnterprise = {trafficData?.enterprise || []}
+                hwEnterprise={trafficData?.enterprise || []}
                 // @ts-ignore
-                hwFullService  = {trafficData?.fullService || []}
+                hwFullService={trafficData?.fullService || []}
                 // @ts-ignore
-                hwConRate = {trafficData?.conRate || []}
+                hwConRate={trafficData?.conRate || []}
                 selectedCity={selectedCity}
                 loading={loading}
                 key={targetKey} // 使用复合key确保重新渲染
@@ -281,11 +318,11 @@ const Dashboard = () => {
                   // @ts-ignore
                   enterpriseData={dashboardData?.enterprise || []}
                   // @ts-ignore
-                  hwEnterprise = {trafficData?.enterprise || []}
+                  hwEnterprise={trafficData?.enterprise || []}
                   // @ts-ignore
-                  hwFullService  = {trafficData?.fullService || []}
+                  hwFullService={trafficData?.fullService || []}
                   // @ts-ignore
-                  hwConRate = {trafficData?.conRate || []}
+                  hwConRate={trafficData?.conRate || []}
                   onCityClick={handleCityClick}
                   loading={loading}
                   selectedCity={selectedCity} // 添加selectedCity属性，确保地图组件知道当前选中的城市
