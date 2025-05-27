@@ -169,7 +169,7 @@ const Target: React.FC<TargetProps> = ({
     const inboundCalls = queue10009 + allBusinessQueue;
 
     // 4. 计算接通率
-    let connectionRate = 78; // 默认值
+    let connectionRate = 0; // 默认值
     try {
       if (hwConRate) {
         const { zqTurned = 0, wanTurned = 0, wanCallIn = 0, zqCallIn = 0 } = hwConRate;
